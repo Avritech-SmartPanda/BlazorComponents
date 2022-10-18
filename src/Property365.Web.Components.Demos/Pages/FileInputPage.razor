@@ -1,0 +1,40 @@
+﻿@page "/fileinput"
+
+@using Property365.Web.Components.Demos.Data
+@using Property365.Web.Components.Demos.Models.Northwind
+
+@inject NorthwindContext dbContext
+
+<Property365ComponentContainer Name="FileInput">
+<div class="flex flex-row px-3">
+    <div class="w-1/2">
+        <Property365Card>
+        <h4 class="mb-4">Employee: <b>@(firstEmployee.FirstName + " " + firstEmployee.LastName)</b></h4>
+        <Property365FileInput @bind-Value=@firstEmployee.Photo TValue="string" Class="w-100" 
+            Change=@(args => OnChange(args, "FileInput")) Error=@(args => OnError(args, "FileInput")) />
+        </Property365Card>
+    </div>
+</div>
+</Property365ComponentContainer>
+
+<EventConsole @ref=@console Class="mt-4" />
+
+@code {
+    Employee firstEmployee;
+    EventConsole console;
+
+    protected override async Task OnInitializedAsync()
+    {
+        firstEmployee = await Task.FromResult(dbContext.Employees.FirstOrDefault());
+    }
+
+    void OnChange(string value, string name)
+    {
+        console.Log($"{name} value changed");
+    }
+
+    void OnError(UploadErrorEventArgs args, string name)
+    {
+        console.Log($"{args.Message}");
+    }
+}

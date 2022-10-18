@@ -1,0 +1,162 @@
+﻿@using Property365.Web.Components
+@using System.Collections
+@using System.Collections.Generic
+@using System.Linq.Dynamic.Core
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.JSInterop
+@typeparam TValue
+@inherits DropDownBase<TValue>
+
+@if (Visible)
+{
+    <div @ref="@Element" @attributes="Attributes" class="@GetCssClass()  outline-1 hover:border-primary-900 focus:border-primary-900 focus:outline-none border border-gray-300 text-gray-900 text-sm rounded  block w-full px-3 py-1" @onfocus="@((args) => OnFocus(args))"
+         style="@Style" tabindex="@TabIndex" id="@GetId()" @onclick="@(args => OpenPopup("ArrowDown", false, true))" @onkeydown="@((args) => OnKeyPress(args))">
+        <div class="helper-hidden-accessible">
+            <input tabindex="-1" disabled="@Disabled" style="width:100%" aria-haspopup="listbox" readonly="" type="text"
+                   name="@Name" aria-label="@(!Multiple && internalValue != null ? PropertyAccess.GetItemOrValueFromProperty(internalValue, TextProperty) : "")" />
+
+        </div>
+
+        @if (ValueTemplate != null && selectedItem != null)
+        {
+            <label class="dropdown-label rz-inputtext " style="width:100%;">
+                @ValueTemplate(selectedItem)
+            </label>
+        }
+        else if (Template != null && selectedItem != null)
+        {
+            <label class="dropdown-label rz-inputtext " style="width:100%;">
+                @Template(selectedItem)
+            </label>
+        }
+        else if (selectedItem != null && !Multiple)
+        {
+            <label class="dropdown-label rz-inputtext " style="width:100%;">
+                @PropertyAccess.GetItemOrValueFromProperty(selectedItem, TextProperty)
+            </label>
+        }
+        else if (selectedItems.Count > 0)
+        {
+            <label class="dropdown-label rz-inputtext " style="width:100%;">
+                @if (selectedItems.Count < MaxSelectedLabels)
+                {
+                    @if (Template == null)
+                    {
+                        @(string.Join(",", selectedItems.Select(i => PropertyAccess.GetItemOrValueFromProperty(i, TextProperty))))
+                    }
+                    else
+                    {
+                        foreach (var item in selectedItems)
+                        {
+                            @Template(item)@(",")
+                        }
+                    }
+                }
+                else
+                {
+                    @($"{selectedItems.Count} {SelectedItemsText}")
+                }
+            </label>
+        }
+        else if (SelectedValue != null)
+        {
+            <label class="dropdown-label rz-inputtext rz-corner-all" style="width:100%;">
+                @PropertyAccess.GetItemOrValueFromProperty(SelectedValue, TextProperty)
+            </label>
+        }
+        else if (!string.IsNullOrEmpty(Placeholder))
+        {
+            <label class="dropdown-label rz-inputtext  rz-placeholder" style="width:100%;">
+                @Placeholder
+            </label>
+        }
+        else
+        {
+            <label class="dropdown-label rz-inputtext " style="width:100%">
+                &nbsp;
+            </label>
+        }
+
+        <div class="dropdown-trigger  rz-corner-right">
+            <span class="dropdown-trigger-icon  rzi chevron-down"></span>
+        </div>
+
+        <div id="@PopupID" class="@(Multiple ? "rz-multiselect-panel" : "dropdown-panel")"
+             style="display:none;min-width:320px;padding:0px;">
+            <div class="rz-lookup-panel">
+                @if (AllowFiltering)
+                {
+                    <div class="rz-lookup-search">
+                        <input id="@SearchID" @ref="@search" tabindex="-1" placeholder="@SearchText"
+                               @onchange="@((args) => OnFilter(args))" @onkeydown="@((args) => OnFilterKeyPress(args))" value="@searchText" style="@(ShowSearch ? "" : "margin-right:0px;")" />
+                        @if (ShowSearch)
+                        {
+                            <button class="rz-button rz-button-md    btn-primary rz-button-icon-only" type="button" title="">
+                                <i class="rz-button-icon-left rzi">search</i>
+                            </button>
+                        }
+                    </div>
+                }
+                @if (Template != null)
+                {
+                    <Property365DataGrid AllowRowSelectOnRowClick="@AllowRowSelectOnRowClick" @bind-Value=@selectedItems PagerHorizontalAlign="@PagerHorizontalAlign" PagerAlwaysVisible="@PagerAlwaysVisible" Responsive="@Responsive" AllowColumnResize="@AllowColumnResize" ColumnWidth="@ColumnWidth" @ref="grid" Data="@(LoadData.HasDelegate ? (Data != null ? Data.Cast<object>() : Enumerable.Empty<object>()) : pagedData)" Count="@(LoadData.HasDelegate ? Count : count)" LoadData="@OnLoadData"
+                                    TItem="object" CellRender="@OnCellRender" RowRender="@OnRowRender" ShowPagingSummary="@ShowPagingSummary" PagingSummaryFormat="@PagingSummaryFormat" PageSize="@PageSize" PageNumbersCount="@PageNumbersCount" AllowPaging="@(!IsVirtualizationAllowed())" AllowSorting="@AllowSorting" RowSelect="@OnRowSelect" Style="@(IsVirtualizationAllowed() ? "height:285px" : "")">
+                        <Columns>
+                            <Property365DataGridColumn TItem="object" Property="@TextProperty" Title="@TextProperty" Type="typeof(string)">
+                                <Template>
+                                    @Template(context)
+                                </Template>
+                            </Property365DataGridColumn>
+                        </Columns>
+                        <EmptyTemplate>
+                            @EmptyTemplate
+                        </EmptyTemplate>
+                    </Property365DataGrid>
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(TextProperty) || Columns != null)
+                    {
+                        <Property365DataGrid AllowRowSelectOnRowClick="@AllowRowSelectOnRowClick" @bind-Value=@selectedItems PagerHorizontalAlign="@PagerHorizontalAlign" PagerAlwaysVisible="@PagerAlwaysVisible" Responsive="@Responsive" AllowColumnResize="@AllowColumnResize" ColumnWidth="@ColumnWidth" EmptyText="@EmptyText" @ref="grid" Data="@(LoadData.HasDelegate ? (Data != null ? Data.Cast<object>() : Enumerable.Empty<object>()) : pagedData)" Count="@(LoadData.HasDelegate ? Count : count)" LoadData="@OnLoadData"
+                                        TItem="object" CellRender="@OnCellRender" RowRender="@OnRowRender" ShowPagingSummary="@ShowPagingSummary" PagingSummaryFormat="@PagingSummaryFormat" PageSize="@PageSize" PageNumbersCount="@PageNumbersCount" AllowPaging="@(!IsVirtualizationAllowed())" AllowSorting="@AllowSorting" RowSelect="@OnRowSelect" Style="@(IsVirtualizationAllowed() ? "height:285px" : "")">
+                            <Columns>
+                                @if (Columns != null)
+                                {
+                                    @Columns
+                                }
+                                else
+                                {
+                                    <Property365DataGridColumn TItem="object" Property="@TextProperty" Title="@TextProperty" Type="typeof(string)" />
+                                }
+                            </Columns>
+                            <EmptyTemplate>
+                                @EmptyTemplate
+                            </EmptyTemplate>
+                        </Property365DataGrid>
+                    }
+                    else
+                    {
+                        <Property365DataGrid AllowRowSelectOnRowClick="@AllowRowSelectOnRowClick" @bind-Value=@selectedItems PagerHorizontalAlign="@PagerHorizontalAlign" PagerAlwaysVisible="@PagerAlwaysVisible" Responsive="@Responsive" AllowColumnResize="@AllowColumnResize" ColumnWidth="@ColumnWidth" EmptyText="@EmptyText" @ref="grid" Data="@(LoadData.HasDelegate ? (Data != null ? Data.Cast<object>() : Enumerable.Empty<object>()) : pagedData)" Count="@(LoadData.HasDelegate ? Count : count)" LoadData="@OnLoadData"
+                                        TItem="object" CellRender="@OnCellRender" RowRender="@OnRowRender" ShowPagingSummary="@ShowPagingSummary" PagingSummaryFormat="@PagingSummaryFormat" PageSize="@PageSize" PageNumbersCount="@PageNumbersCount" AllowPaging="@(!IsVirtualizationAllowed())" AllowSorting="@AllowSorting" RowSelect="@OnRowSelect" Style="@(IsVirtualizationAllowed() ? "height:285px" : "")">
+                            <Columns>
+                                <Property365DataGridColumn TItem="object" Property="it" Title="Item" Type="typeof(string)">
+                                    <Template>
+                                        @context
+                                    </Template>
+                                </Property365DataGridColumn>
+                            </Columns>
+                            <EmptyTemplate>
+                                @EmptyTemplate
+                            </EmptyTemplate>
+                        </Property365DataGrid>
+                    }
+                }
+            </div>
+        </div>
+
+        @if (AllowClear && (!Multiple && HasValue || Multiple && selectedItems.Count > 0))
+        {
+            <i class="dropdown-clear-icon rzi rzi-times" @onclick="@Clear"></i>
+        }
+    </div>
+}

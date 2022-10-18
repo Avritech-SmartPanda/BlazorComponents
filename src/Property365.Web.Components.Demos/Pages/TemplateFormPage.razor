@@ -1,0 +1,291 @@
+﻿@page "/templateform"
+
+<style>
+    form .row {
+        margin-bottom: 16px;
+    }
+</style>
+
+<Property365ComponentContainer Name="TemplateForm">
+@if (order == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <Property365TemplateForm Data="@order" Submit="@((Order args) => { Submit(args); })">
+        <div class="row">
+            <div class="col-md-6">
+                <Property365Fieldset Text="Purchase Info">
+                    <div class="row">
+                        <div class="col-md-4 align-items-center d-flex">
+                            <Property365Label Text="Credit Card" />
+                        </div>
+                        <div class="col-md-8">
+                            <Property365DropDown @bind-Value="order.CardId" AllowClear="true" Placeholder="Select something" Data="@cards" style="width: 100%;" TextProperty="CardNr" ValueProperty="CardId" Name="CardId">
+                            </Property365DropDown>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 align-items-center d-flex">
+                            <Property365Label Text="Card #" />
+                        </div>
+                        <div class="col-md-8">
+                            <Property365TextBox style="width: 100%;" Name="CardNr" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 align-items-center d-flex">
+                            <Property365Label Text="Expiry Date" />
+                        </div>
+                        <div class="col-md-8">
+                            <Property365DatePicker style="width: 100%;" Name="ExpiryDate" @bind-Value="order.ExpiryDate" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 align-items-center d-flex">
+                            <Property365Label Text="Cardholder" />
+                        </div>
+                        <div class="col-md-8">
+                            <Property365TextBox style="width: 100%;" Name="CardHolder" />
+                        </div>
+                    </div>
+                </Property365Fieldset>
+                <Property365Fieldset Text="Contact Info">
+                    <div class="row">
+                        <div class="col-md-4 align-items-center d-flex">
+                            <Property365Label Text="Name" />
+                        </div>
+                        <div class="col-md-8">
+                            <Property365TextBox style="width: 100%;" Name="Name" />
+                        </div>
+                    </div>
+                    <Property365Tabs SelectedIndex="0">
+                        <Tabs>
+                            <Property365TabsItem Text="Billing Address">
+                                <div class="row">
+                                    <div class="col-md-4 align-items-center d-flex">
+                                        <Property365Label Text="Country" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <Property365DropDown @bind-Value="order.Country" Placeholder="USA" Data="@countries" style="width: 100%;" TextProperty="Name" ValueProperty="Id" Name="Country">
+                                        </Property365DropDown>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 align-items-center d-flex">
+                                        <Property365Label Text="City" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <Property365TextBox style="width: 100%;" Name="City" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 align-items-center d-flex">
+                                        <Property365Label Text="Address Line 1">
+                                        </Property365Label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <Property365TextBox style="width: 100%;" Name="Address1" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 align-items-center d-flex">
+                                        <Property365Label Text="Address Line 2" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <Property365TextBox style="width: 100%;" Name="Address2" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 align-items-center d-flex">
+                                        <Property365Label Text="State/Province/Region" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <Property365TextBox style="width: 100%;" Name="State" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 align-items-center d-flex">
+                                        <Property365Label Text="Zip/Postal Code" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <Property365TextBox style="width: 100%;" Name="Zip" />
+                                    </div>
+                                </div>
+                            </Property365TabsItem>
+                            <Property365TabsItem Text="Shipping Address">
+                            </Property365TabsItem>
+                        </Tabs>
+                    </Property365Tabs>
+                </Property365Fieldset>
+            </div>
+            <div class="col-md-6">
+                <Property365Fieldset Text="Store Info">
+                    <div class="row">
+                        <div class="align-items-center d-flex col-md-2">
+                            <Property365Label Text="Store #" />
+                        </div>
+                        <div class="col-md-10">
+                            <Property365TextBox Placeholder="123" style="width: 45.3125px;" Name="StoreId" />
+                            <Property365Button ButtonStyle="ButtonStyle.Info" Icon="add_location" style="margin-left: 11px; width: 166.046875px;" Text="Locate store">
+                            </Property365Button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="align-items-center d-flex col-md-2">
+                            <Property365Label Text="Name" />
+                        </div>
+                        <div class="col-md-10">
+                            <Property365TextBox Disabled="true" Placeholder="The warehouse" style="width: 100%;" Name="Warehouse" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="align-items-center d-flex col-md-2">
+                            <Property365Label Text="Region" />
+                        </div>
+                        <div class="col-md-3">
+                            <Property365TextBox Disabled="true" Placeholder="West" style="width: 100%;" Name="Region" />
+                        </div>
+                        <div class="align-items-center d-flex col-md-2">
+                            <Property365Label Text="System" />
+                        </div>
+                        <div class="col-md-5">
+                            <Property365TextBox Disabled="true" Placeholder="US" style="width: 100%;" Name="System" />
+                        </div>
+                    </div>
+                </Property365Fieldset>
+                <Property365Fieldset Text="POS Info">
+                    <div class="row">
+                        <div class="align-items-center d-flex col-md-3">
+                            <Property365Label Text="Trans #" />
+                        </div>
+                        <div class="col-md-9">
+                            <Property365TextBox Disabled="true" Placeholder="S4485" style="width: 100%;" Name="TransId" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="align-items-center d-flex col-md-3">
+                            <Property365Label Text="Register" />
+                        </div>
+                        <div class="col-md-9">
+                            <Property365TextBox Disabled="true" Placeholder="Register #4" style="width: 100%;" Name="Register" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="align-items-center d-flex col-md-3">
+                            <Property365Label Text="Clerk" />
+                        </div>
+                        <div class="col-md-9">
+                            <Property365TextBox Disabled="true" Placeholder="Jane Doe" style="width: 100%;" Name="Clerk" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="align-items-center d-flex col-md-3">
+                            <Property365Label Text="Amount" />
+                        </div>
+                        <div class="col-md-3">
+                            <Property365Numeric Placeholder="300" style="width: 100%;" Name="Amount" @bind-Value="order.Amount" />
+                        </div>
+                        <div class="align-items-center d-flex col-md-2">
+                            <Property365Label Text="Tax" />
+                        </div>
+                        <div class="col-md-4">
+                            <Property365Numeric Placeholder="123" style="width: 100%;" Name="Tax" @bind-Value="order.Tax" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="align-items-center d-flex col-md-3">
+                            <Property365Label Text="Order Date" />
+                        </div>
+                        <div class="col-md-3">
+                            <Property365DatePicker style="width: 100%;" Name="OrderDate" @bind-Value="order.OrderDate" />
+                        </div>
+                        <div class="align-items-center d-flex col-md-2">
+                            <Property365Label Text="Ship Date" />
+                        </div>
+                        <div class="col-md-4">
+                            <Property365DatePicker style="width: 100%;" Name="ShipDate" @bind-Value="order.ShipDate" />
+                        </div>
+                    </div>
+                </Property365Fieldset>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
+                <Property365Button ButtonType="ButtonType.Submit" Icon="save" Text="Save" />
+                <Property365Button ButtonStyle="ButtonStyle.Light" Icon="cancel" style="display: inline-block; margin-left: 10px;" Text="Cancel" Click="@Cancel" />
+            </div>
+        </div>
+    </Property365TemplateForm>
+}
+</Property365ComponentContainer>
+
+@code {
+    public class Order
+    {
+        public int CardId { get; set; }
+        public string CardNr { get; set; }
+        public DateTime ExpiryDate { get; set; }
+        public string CardHolder { get; set; }
+        public string Name { get; set; }
+        public string Address1 { get; set; }
+        public string Address2 { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Zip { get; set; }
+        public int Country { get; set; }
+        public int StoreId { get; set; }
+        public string Warehouse { get; set; }
+        public string Region { get; set; }
+        public string System { get; set; }
+        public int TransId { get; set; }
+        public string Register { get; set; }
+        public string Clerk { get; set; }
+        public decimal Amount { get; set; }
+        public decimal Tax { get; set; }
+        public DateTime OrderDate { get; set; }
+        public DateTime ShipDate { get; set; }
+    }
+
+    public class CreditCard
+    {
+        public int CardId { get; set; }
+        public string CardNr { get; set; }
+    }
+
+    public class Country
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    Order order = new Order()
+    {
+        ExpiryDate = DateTime.Parse("10/10/2022"),
+        OrderDate = DateTime.Now,
+        ShipDate = DateTime.Now
+    };
+
+    List<CreditCard> cards = new List<CreditCard>()
+{
+        new CreditCard() { CardId = 1, CardNr = "5555555555554444" },
+        new CreditCard() { CardId = 2, CardNr = "4012888888881881" }
+    };
+
+    List<Country> countries = new List<Country>()
+{
+        new Country() { Id = 1, Name = "USA" },
+        new Country() { Id = 2, Name = "Germany" }
+    };
+
+    void Submit(Order arg)
+    {
+        //
+    }
+
+    void Cancel()
+    {
+        //
+    }
+}

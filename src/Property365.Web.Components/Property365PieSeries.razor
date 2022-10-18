@@ -1,0 +1,50 @@
+@using Property365.Web.Components.Rendering
+@typeparam TItem
+@inherits Property365.Web.Components.CartesianSeries<TItem>
+
+<CascadingValue Value="@this">
+  @ChildContent
+</CascadingValue>
+
+@code {
+   public override RenderFragment Render(ScaleBase categoryScale, ScaleBase valueScale)
+   {
+        var className = $"rz-pie-series rz-series-{Chart.Series.IndexOf(this)}";
+        var x = CenterX;
+        var y = CenterY;
+        var radius = CurrentRadius;
+
+        return 
+        @<g class="@className">
+            @if (Items.Any())
+            {
+                var sum = Items.Sum(Value);
+
+                double startAngle = -90;
+
+                @foreach(var data in Items)
+                {
+                    var value = Value(data);
+                    var angle = sum == 0 ? 0 : (value / sum) * 360;
+                    var endAngle = startAngle + angle;
+
+                    var d = Segment(x, y, radius, 0, startAngle, endAngle);
+
+                    startAngle = endAngle;
+                    
+                    var index = Items.IndexOf(data);
+                    var arcClassName = $"rz-series-item-{index}";
+                    var fill = PickColor(index, Fills);
+                    var stroke = PickColor(index, Strokes);
+
+                    <g class="@arcClassName">
+                        @if (angle > 0)
+                        {
+                            <Path D="@d" Fill="@fill" StrokeWidth="@StrokeWidth" Stroke="@stroke" />
+                        }
+                    </g>
+                }
+            }
+        </g>;
+    }
+}

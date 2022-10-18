@@ -1,0 +1,120 @@
+﻿@using Property365.Web.Components
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Forms
+
+@inherits Property365Component
+
+@using System.Linq
+
+@if (Steps != null)
+{
+    <CascadingValue Value=this>
+        @Steps
+    </CascadingValue>
+}
+@if (Visible)
+{
+    var btnDisableClass = "";
+
+    <div @ref="@Element" style="@Style" @attributes="Attributes" class="@GetCssClass()" id="@GetId()">
+
+        @if (ShowStepsHeader)
+        {
+            @for (var i = 0; i < steps.Count; i++)
+            {
+                var step = steps[i];
+                var progress = (i + 1) * 100 / steps.Count;
+                @if (step.Visible)
+                {
+                    @if (IsSelected(i, step))
+                    {
+                        <div class="border-b-2 py-4 flex  flex-col ">
+                            <div class="uppercase tracking-wide text-xs font-bold text-gray-500 mb-1 leading-tight">
+                                Step: @(steps.Where(s => s.Visible).ToList().IndexOf(step) + 1) of @steps.Count
+                            </div>
+                            <div class="w-full">
+                                <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                                    <div class="flex-1">
+                                        <div class="text-lg font-bold text-gray-700 leading-tight">
+                                            @if (step.Template != null)
+                                            {
+                                                @step.Template(step)
+                                            }
+                                            else
+                                            {
+                                                <span>@step.Text</span>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-center md:w-64">
+                                        <div class="h-3 relative w-full rounded-full mr-2 overflow-hidden">
+                                            <div class="w-full h-full bg-gray-200 absolute"></div>
+                                            <div class="transition-all ease-out duration-1000 h-full bg-primary-900 relative"
+                            style="width: @(progress)%"></div>
+                                        </div>
+
+                                        <div class="text-xs w-10 text-gray-600">@progress %</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+
+                }
+            }
+        }
+ @if (SelectedIndex < steps.Count - 1)
+        {
+            var nextStep = steps[SelectedIndex + 1];
+            btnDisableClass = nextStep.Disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer opacity-100 ";
+        }
+
+
+
+        @for (var i = 0; i < steps.Count; i++)
+        {
+            var step = steps[i];
+            @if (step.Visible)
+            {             
+                @if (IsSelected(i, step))
+                {
+                    <div class="my-8">
+                        @if (step.ChildContent != null)
+                        {
+                            
+                            @step.ChildContent
+                        }
+                    </div>
+                }
+            }
+        }
+
+        @if (ShowStepsButtons)
+        {
+            <div class="flex flex-row justify-between mt-4">
+                 @if (IsFirstVisibleStep()){<div></div>}
+                 else{
+                    <a class='@($"py-2.5 px-9 rounded border-primary-900 text-primary-900 border no-underline hover:no-underline hover:text-white hover:bg-primary-900 inline-flex items-center focus:outline-none font-medium {(IsFirstVisibleStep() ? "opacity-50 cursor-not-allowed" : "cursor-pointer" )}")'
+            @onclick="@PrevStep" href="javascript:void(0)">@PreviousText</a> 
+                }
+                            
+                @if (IsLastVisibleStep())
+                {
+                    <Property365Button ButtonType="ButtonType.Submit" form=@FormId ButtonStyle="ButtonStyle.Primary" Text="@NextText" />
+                }
+                else
+                {
+                    <a class='@($"py-2.5 px-9 rounded hover:bg-dark-900 bg-primary-900 no-underline hover:no-underline text-white border-none inline-flex items-center focus:outline-none font-medium {btnDisableClass}")'
+            @onclick="@NextStep" href="javascript:void(0)">
+                    <span> @NextText</span>
+                </a>
+                }
+               
+                
+            </div>
+        }
+    </div>
+}
+

@@ -1,0 +1,53 @@
+﻿@page "/accordion"
+
+<Property365ComponentContainer Name="Accordion">
+<div class="px-3 min-h-[200px] grid grid-cols-2 gap-4 ">
+  
+        <Property365Card>
+            <h4>Accordion with single expand</h4>
+            <Property365Accordion Expand=@(args => Change(args, "Accordion with single expand", "expanded"))>
+                <Items>
+                    <Property365AccordionItem Text="Orders" Icon="account_balance_wallet">
+                        Details for Orders
+                    </Property365AccordionItem>
+                    <Property365AccordionItem Text="Employees" Icon="account_box">
+                        Details for Employees
+                    </Property365AccordionItem>
+                    <Property365AccordionItem Text="Customers" Icon="accessibility">
+                        Details for Customers
+                    </Property365AccordionItem>
+                </Items>
+            </Property365Accordion>
+        </Property365Card>
+
+
+        <Property365Card>
+            <h4>Accordion with multiple expand</h4>
+            <Property365Accordion Multiple="true" Collapse=@(args => Change(args, "Accordion with multiple expand", "collapsed"))
+                                Expand=@(args => Change(args, "Accordion with multiple expand", "expanded"))>
+                <Items>
+                    <Property365AccordionItem Text="Orders" Icon="account_balance_wallet">
+                        Details for Orders
+                    </Property365AccordionItem>
+                    <Property365AccordionItem Text="Employees" Icon="account_box">
+                        Details for Employees
+                    </Property365AccordionItem>
+                    <Property365AccordionItem Text="Customers" Icon="accessibility">
+                        Details for Customers
+                    </Property365AccordionItem>
+                </Items>
+            </Property365Accordion>
+        </Property365Card>
+
+</div>
+</Property365ComponentContainer>
+
+<EventConsole @ref=@console Class="mt-4" />
+
+@code {
+    EventConsole console;
+    void Change(object value, string name, string action)
+    {
+        console.Log($"{name} item with index {value} {action}");
+    }
+}

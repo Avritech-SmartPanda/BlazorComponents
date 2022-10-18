@@ -1,0 +1,52 @@
+﻿@page "/cascading-dropdowns"
+
+@using Property365.Web.Components.Demos.Data
+@using Property365.Web.Components.Demos.Models.Northwind
+@using Microsoft.EntityFrameworkCore
+
+@inject NorthwindContext dbContext
+
+<h1>Cascading DropDowns</h1>
+
+<p>Cascading Property365 Blazor DropDown components.</p>
+
+<Property365ComponentContainer Name="DropDown" Source="CascadingDropDowns" Heading="false">
+    <div class="row">
+        <div class="col-xl-6 mb-4">
+            <h3>1. Customers</h3>
+            <Property365DropDown Style="width:300px" TValue="string" @bind-Value="CustomerID" Placeholder="Select customer" AllowFiltering="true" Data="@(customers)" TextProperty="CompanyName" ValueProperty="CustomerID"/>
+        </div>
+        <div class="col-xl-6 mb-4">
+            <h3>2. Orders</h3>
+            <Property365DropDown Style="width:300px" TValue="int" @bind-Value="OrderID" Placeholder="Select order" Data="@(orders.Where(o => o.CustomerID == CustomerID))" ValueProperty="OrderID">
+                <Template>
+                    Order Date: @String.Format("{0:d}", ((Order)context).OrderDate)
+                </Template>
+            </Property365DropDown>
+        </div>
+    </div>
+    <h3>Order Details</h3>
+    <Property365DataGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
+                Data="@(orderDetails.Where(o => o.OrderID == OrderID))" TItem="OrderDetail" ColumnWidth="200px">
+        <Columns>
+            <Property365DataGridColumn TItem="OrderDetail" Property="Product.ProductName" Title="Product" />
+            <Property365DataGridColumn TItem="OrderDetail" Property="Quantity" Title="Quantity" />
+            <Property365DataGridColumn TItem="OrderDetail" Property="Discount" Title="Discount" FormatString="{0:P}" />
+        </Columns>
+    </Property365DataGrid>
+</Property365ComponentContainer>
+@code {
+    IEnumerable<Customer> customers;
+    IEnumerable<Order> orders;
+    IEnumerable<OrderDetail> orderDetails;
+
+    string CustomerID;
+    int OrderID;
+
+    protected override void OnInitialized()
+    {
+        customers = dbContext.Customers.ToList();
+        orders = dbContext.Orders.ToList();
+        orderDetails = dbContext.OrderDetails.Include("Product").ToList();
+    }
+}

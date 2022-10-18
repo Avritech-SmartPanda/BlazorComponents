@@ -1,0 +1,118 @@
+@using Property365.Web.Components.Rendering
+@using System.Text.RegularExpressions
+@using Microsoft.JSInterop
+@inherits FormComponent<string>
+
+@if (Visible)
+{
+    <div @ref=@Element style=@Style @onclick=@Toggle @attributes=@Attributes class=@GetCssClass() id=@GetId()>
+        @if(Icon != null)
+        {
+            <i class="rzi">@Icon</i>
+        }
+        <div class="rz-colorpicker-value" style="background-color: @Color" ></div>
+        <button type="button" tabindex="-1" class="rz-colorpicker-trigger" disabled=@Disabled @onclick:preventDefault><i class="rzi" /></button>
+        <Popup @ref=@Popup class="rz-colorpicker-popup" Close=@Close Open=@Open>
+            @if (ShowHSV)
+            {
+                <Draggable class="rz-saturation-picker rz-colorpicker-section" style=@($"background-color: {HSV.ToRGB().ToCSS()}") Drag=@OnSaturationMove>
+                    <div class="rz-saturation-white">
+                        <div class="rz-saturation-black"></div>
+                        <div class="rz-saturation-handle" style=@($"top: {(SaturationHandleTop*100).ToInvariantString()}%; left: {(SaturationHandleLeft * 100).ToInvariantString()}%")></div>
+                    </div>
+                </Draggable>
+                <div class="rz-colorpicker-preview-area rz-colorpicker-section">
+                    <div class="rz-hue-and-alpha">
+                        <Draggable class="rz-hue-picker" Drag=@OnHueMove>
+                            <div class="rz-hue-handle" style=@($"top: 0; left: {(HueHandleLeft * 100).ToInvariantString()}%")></div>
+                        </Draggable>
+                        <Draggable style=@($"background-image: linear-gradient(to right, {AlphaGradientStart} 0%, {AlphaGradientEnd} 100%)") class="rz-alpha-picker" Drag=@OnAlphaMove>
+                            <div class="rz-alpha-handle" style=@($"top: 0; left: {(AlphaHandleLeft * 100).ToInvariantString()}%")></div>
+                        </Draggable>
+                    </div>
+                    <div class="rz-colorpicker-preview" style=@($"background-color: {Color}")></div>
+                </div>
+            }
+            @if (ShowRGBA)
+            {
+                <div class="rz-colorpicker-rgba rz-colorpicker-section" @onmousedown:stopPropagation> 
+                    <div class="rz-color-box">
+                        <Property365TextBox Value=@Hex @oninput=@(args => ChangeRGB(args.Value)) />
+                        @HexText
+                    </div>
+                    <div class="rz-color-box">
+                        <Property365Numeric TValue="double" Value=@Red Min="0" Max="255" 
+                            @oninput=@(args => ChangeColor(args.Value, (color, value) => color.Red = value)) 
+                            Change=@(red => ChangeColor(red, (color, value) => color.Red = value)) 
+                        />
+                        @RedText
+                    </div>
+                    <div class="rz-color-box">
+                        <Property365Numeric TValue="double" Value=@Green Min="0" Max="255" 
+                            @oninput=@(args => ChangeColor(args.Value, (color, value) => color.Green = value)) 
+                            Change=@(green => ChangeColor(green, (color, value) => color.Green = value)) 
+                        />
+                        @GreenText
+                    </div>
+                    <div class="rz-color-box">
+                        <Property365Numeric TValue="double" Value=@Blue Min="0" Max="255" 
+                            @oninput=@(args => ChangeColor(args.Value, (color, value) => color.Blue = value)) 
+                            Change=@(blue => ChangeColor(blue, (color, value) => color.Blue = value)) 
+                        />
+                        @BlueText
+                    </div>
+                    <div class="rz-color-box">
+                        <Property365Numeric TValue="double" Value=@Alpha Min="0" Max="100" 
+                            @oninput=@(args => ChangeAlpha(args.Value)) 
+                            Change=@(alpha => ChangeAlpha(alpha)) 
+                        />
+                        @AlphaText
+                    </div>
+                </div>
+            }
+            @if (ShowColors)
+            {
+                <div class="rz-colorpicker-colors rz-colorpicker-section">
+                    <CascadingValue Value=@this>
+                    @if (ChildContent != null)
+                    {
+                        @ChildContent
+                    }
+                    else
+                    {
+                        <Property365ColorPickerItem Value="ff2800" />
+                        <Property365ColorPickerItem Value="fe9300" />
+                        <Property365ColorPickerItem Value="fefb00" />
+                        <Property365ColorPickerItem Value="02f900" />
+                        <Property365ColorPickerItem Value="00fdff" />
+                        <Property365ColorPickerItem Value="0433ff" />
+                        <Property365ColorPickerItem Value="ff40ff" />
+                        <Property365ColorPickerItem Value="942292" />
+                        <Property365ColorPickerItem Value="aa7942" />
+                        <Property365ColorPickerItem Value="ffffff" />
+                        <Property365ColorPickerItem Value="000000" />
+                        <Property365ColorPickerItem Value="53d5fd" />
+                        <Property365ColorPickerItem Value="73a7fe" />
+                        <Property365ColorPickerItem Value="874efe" />
+                        <Property365ColorPickerItem Value="d357fe" />
+                        <Property365ColorPickerItem Value="ed719e" />
+                        <Property365ColorPickerItem Value="ff8c82" />
+                        <Property365ColorPickerItem Value="ffa57d" />
+                        <Property365ColorPickerItem Value="ffc677" />
+                        <Property365ColorPickerItem Value="fff995" />
+                        <Property365ColorPickerItem Value="ebf38f" />
+                        <Property365ColorPickerItem Value="b1dd8c" />
+                    }
+                    </CascadingValue>
+                </div>
+
+            }
+            @if(ShowButton)
+            {
+                <div class="rz-colorpicker-button rz-colorpicker-section">
+                    <Property365Button ButtonStyle="ButtonStyle.Primary" Click=@OnClick Text=@ButtonText @onclick:preventDefault />
+                </div>
+            }
+        </Popup>
+    </div>
+}

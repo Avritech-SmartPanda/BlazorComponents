@@ -1,0 +1,150 @@
+﻿@using Property365.Web.Components
+@using System.Linq
+@using System.Linq.Dynamic.Core
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.JSInterop
+@using Microsoft.AspNetCore.Components.Rendering
+@typeparam TValue
+@inherits DropDownBase<TValue>
+
+@if (Visible)
+{
+    <div @ref="@Element" @attributes="Attributes" class="@GetCssClass()" onmousedown="Property365Components.activeElement = null" @onclick="@(args => OpenPopup("ArrowDown", false, true))" @onclick:preventDefault @onclick:stopPropagation style="@Style" tabindex="@TabIndex"
+         @onkeydown="@((args) => OnKeyPress(args))" id="@GetId()"  @onfocus="@((args) => OnFocus(args))">
+        <div class="rz-helper-hidden-accessible hidden">
+            <input  disabled="@Disabled" style="width:100%" aria-haspopup="listbox" readonly="" type="text" tabindex="-1"
+                   name="@Name" value="@(internalValue != null ? internalValue : "")"
+                   aria-label="@(!Multiple && internalValue != null ? PropertyAccess.GetItemOrValueFromProperty(internalValue, TextProperty) : "")" />
+        </div>
+
+        @if (ValueTemplate != null && selectedItem != null)
+        {
+            <label class="dropdown-label rz-inputtext " style="width:100%;">
+                @ValueTemplate(selectedItem)
+            </label>
+        }
+        else if (Template != null && selectedItem != null)
+        {
+            <label class="dropdown-label rz-inputtext ">
+                @Template(selectedItem)
+            </label>
+        }
+        else if (selectedItem != null && !Multiple)
+        {
+            <label class="dropdown-label rz-inputtext ">
+                @PropertyAccess.GetItemOrValueFromProperty(selectedItem, TextProperty)
+            </label>
+        }
+        else if (Chips && selectedItems.Count > 0 && selectedItems.Count < MaxSelectedLabels)
+        {
+            <div class="flex flex-wrap space-x-1 space-y-2 items-center">
+                @foreach (var item in selectedItems)
+                {
+                    <div class="bg-light-900 rounded-full px-3.5 space-x-1 py-0 ">
+                        <span class="rz-chip-text">
+                            @PropertyAccess.GetItemOrValueFromProperty(item, TextProperty)
+                        </span>  
+                        <button class="rz-button-icon-only  @(Disabled ?"rz-state-disabled":"")" @onclick:preventDefault @onclick:stopPropagation @onclick="() => OnChipRemove(item)"><Property365Icon Icon="close" /></button>
+                    </div>
+                }
+            </div>
+        }
+        else if (selectedItems.Count > 0)
+        {
+            <label class="dropdown-label rz-inputtext">
+                @if (selectedItems.Count < MaxSelectedLabels)
+                {
+                    @if (Template == null)
+                    {
+                        @(string.Join(",", selectedItems.Select(i => PropertyAccess.GetItemOrValueFromProperty(i, TextProperty))))
+                    }
+                    else
+                    {
+                        foreach (var item in selectedItems)
+                        {
+                            @Template(item)@(",")
+                        }
+                    }
+                }
+                else
+                {
+                    @($"{selectedItems.Count} {SelectedItemsText}")
+                }
+            </label>
+        }
+        else if (!string.IsNullOrEmpty(Placeholder))
+        {
+            <label class="dropdown-label rz-inputtext  rz-placeholder">
+                @Placeholder
+            </label>
+        }
+        else
+        {
+            <label class="dropdown-label rz-inputtext ">
+                &nbsp;
+            </label>
+        }
+
+        <div class="dropdown-trigger  rz-corner-right">
+            @* <span ></span> *@
+            <Property365Icon Icon="expand_more" class="dropdown-trigger-icon mr-1"/>
+        </div>
+
+        <div id="@PopupID" class="@(Multiple ? "rz-multiselect-panel" : "dropdown-panel")"
+             style="display:none; box-sizing: border-box">
+            @if (AllowFiltering && !Multiple)
+            {
+                <div class="dropdown-filter-container">
+                    <input class="dropdown-filter rz-inputtext "  id="@SearchID" @ref="@search" tabindex="@TabIndex" autocomplete="off" type="text"
+                           @onchange="@((ChangeEventArgs args) => OnFilter(args))" @onkeydown="@((args) => OnFilterKeyPress(args))" value="@searchText" />
+                    <span class="dropdown-filter-icon rzi rzi-search"></span>
+                </div>
+            }
+            @if (Multiple && (AllowSelectAll || AllowFiltering))
+            {
+                <div class="rz-multiselect-header rz-helper-clearfix relative" @onclick:preventDefault>
+                    @if(AllowSelectAll)
+                    {
+                    <div class="rz-chkbox" title="@(!AllowFiltering ? "" : SelectAllText)" @onclick="@SelectAll">
+                        <div class="rz-helper-hidden-accessible hidden">
+                            <input readonly="readonly" type="checkbox">
+                        </div>
+                        <div class="@(IsAllSelected() ? "chkbox-box  rz-state-active" : "chkbox-box")">
+                            <span class="@(IsAllSelected() ? "rz-chkbox-icon  rzi rzi-check" : "rz-chkbox-icon ")"></span>
+                        </div>
+                    </div>
+                    }
+                    @if (AllowSelectAll && !AllowFiltering && !string.IsNullOrEmpty(SelectAllText))
+                    {
+                        <span class="cursor-pointer" @onclick="@SelectAll">@SelectAllText</span>
+                    }
+                    @if (AllowFiltering)
+                    {
+                        <div class="rz-multiselect-filter-container">
+                            <input id="@SearchID" tabindex="@TabIndex" class="rz-inputtext " role="textbox" type="text"
+                                   onclick="Property365Components.preventDefaultAndStopPropagation(event)"
+                                   @ref="@search"
+                                   @onchange="@((args) => OnFilter(args))" @onkeydown="@((args) => OnFilterKeyPress(args))" value="@searchText" />
+                            <span class="rz-multiselect-filter-icon rzi rzi-search"></span>
+                        </div>
+                    }
+                    <a class="rz-multiselect-close " @onclick="@ClearAll" @onclick:stopPropagation="true">
+                        <span class="rzi rzi-times"></span>
+                    </a>
+                </div>
+            }
+            <div class="@(Multiple ? "rz-multiselect-items-wrapper" : "dropdown-items-wrapper")" style="max-height: 200px;overflow-x: hidden">
+                <ul @ref="list" class="@(Multiple ? "rz-multiselect-items rz-multiselect-list" : "dropdown-items dropdown-list space-y-2")" role="listbox">
+                    @if (View != null)
+                    {
+                        @RenderItems()
+                    }
+                </ul>
+            </div>
+        </div>
+        @if (AllowClear && (!Multiple && HasValue || Multiple && selectedItems.Count > 0))
+        {
+            <i class="dropdown-clear-icon rzi rzi-times rz-corner-right" @onclick="@ClearAll" @onclick:stopPropagation="true"></i>
+        }
+    </div>
+}

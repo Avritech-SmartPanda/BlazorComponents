@@ -1,0 +1,52 @@
+﻿@using System.Linq
+
+@inherits Property365Component
+
+@if (Items != null)
+{
+    <CascadingValue Value=this>
+        @Items
+    </CascadingValue>
+}
+@if (Visible)
+{
+<div @ref="@Element" role="tablist" @attributes="Attributes" class="@GetCssClass()" id="@GetId()">
+    @for (var i = 0; i < items.Count; i++)
+    {
+        var item = items[i];
+        if (!item.Visible)
+            continue;
+
+        <div class="accordion-header" @attributes="item.Attributes" style="@item.Style">
+            <a @onclick="@((args) => SelectItem(item))" href="javascript:void(0)" role="tab" tabindex="0"
+               id="@($"accordiontab-{items.IndexOf(item)}")" aria-controls="@($"accordiontab-{items.IndexOf(item)}-content")" aria-expanded="true">
+                @if (IsSelected(i, item))
+                {
+                    <span class="accordion-toggle-icon rzi chevron-down"></span>
+                }
+                else
+                {
+                    <span class="accordion-toggle-icon rzi chevron-right"></span>
+                }
+                @if (!string.IsNullOrEmpty(item.Icon))
+                {
+            <i class="rzi">@((MarkupString)item.Icon)</i>
+                }
+                @if (!string.IsNullOrEmpty(item.Text))
+                {
+                    <span>@item.Text</span>
+                }
+            </a>
+        </div>
+        @if (IsSelected(i, item))
+        {
+            <div class="accordion-content-wrapper" role="tabpanel"
+                 id="@($"accordiontab-{items.IndexOf(item)}-content")" aria-hidden="false" aria-labelledby="@($"accordiontab-{items.IndexOf(item)}")">
+                <div class="accordion-content ">
+                    @item.ChildContent
+                </div>
+            </div>
+        }
+    }
+</div>
+}

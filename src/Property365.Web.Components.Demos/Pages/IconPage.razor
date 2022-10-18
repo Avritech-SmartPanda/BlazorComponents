@@ -1,0 +1,137 @@
+﻿@page "/icon"
+
+<Property365ComponentContainer Name="Icon">
+<h3>Material Icons</h3>
+<div class="icons-preview">
+<Property365Icon Icon="facebook" />
+<Property365Icon Icon="accessibility" />
+<Property365Icon Icon="3d_rotation" />
+<Property365Icon Icon="accessible" />
+<Property365Icon Icon="account_balance" />
+<Property365Icon Icon="account_balance_wallet" />
+<Property365Icon Icon="account_box" />
+<Property365Icon Icon="account_circle" />
+<Property365Icon Icon="add_shopping_cart" />
+<Property365Icon Icon="alarm" />
+<Property365Icon Icon="alarm_add" />
+<Property365Icon Icon="alarm_off" />
+<Property365Icon Icon="alarm_on" />
+<Property365Icon Icon="all_out" />
+<Property365Icon Icon="android" />
+<Property365Icon Icon="announcement" />
+<Property365Icon Icon="aspect_ratio" />
+<Property365Icon Icon="assessment" />
+<Property365Icon Icon="assignment" />
+<Property365Icon Icon="assignment_ind" />
+<Property365Icon Icon="assignment_late" />
+<Property365Icon Icon="assignment_return" />
+<Property365Icon Icon="assignment_returned" />
+<Property365Icon Icon="assignment_turned_in" />
+<Property365Icon Icon="autorenew" />
+<Property365Icon Icon="backup" />
+<Property365Icon Icon="book" />
+<Property365Icon Icon="bookmark" />
+<Property365Icon Icon="bookmark_border" />
+<Property365Icon Icon="bug_report" />
+<Property365Icon Icon="build" />
+<Property365Icon Icon="cached" />
+<Property365Icon Icon="camera_enhance" />
+<Property365Icon Icon="card_giftcard" />
+<Property365Icon Icon="card_membership" />
+<Property365Icon Icon="card_travel" />
+<Property365Icon Icon="change_history" />
+<Property365Icon Icon="check_circle" />
+<Property365Icon Icon="chrome_reader_mode" />
+<Property365Icon Icon="class" />
+<Property365Icon Icon="code" />
+<Property365Icon Icon="compare_arrows" />
+<Property365Icon Icon="copyright" />
+<Property365Icon Icon="credit_card" />
+<Property365Icon Icon="dashboard" />
+<Property365Icon Icon="date_range" />
+<Property365Icon Icon="delete" />
+<Property365Icon Icon="delete_forever" />
+<Property365Icon Icon="description" />
+<Property365Icon Icon="dns" />
+<Property365Icon Icon="done" />
+<Property365Icon Icon="done_all" />
+<Property365Icon Icon="donut_large" />
+<Property365Icon Icon="donut_small" />
+<Property365Icon Icon="eject" />
+<Property365Icon Icon="euro_symbol" />
+<Property365Icon Icon="event" />
+<Property365Icon Icon="event_seat" />
+<Property365Icon Icon="exit_to_app" />
+<Property365Icon Icon="explore" />
+<Property365Icon Icon="extension" />
+<Property365Icon Icon="face" />
+<Property365Icon Icon="favorite" />
+<Property365Icon Icon="favorite_border" />
+<Property365Icon Icon="feedback" />
+<Property365Icon Icon="find_in_page" />
+<Property365Icon Icon="find_replace" />
+<Property365Icon Icon="fingerprint" />
+<Property365Icon Icon="flight_land" />
+<Property365Icon Icon="flight_takeoff" />
+<Property365Icon Icon="flip_to_back" />
+<Property365Icon Icon="flip_to_front" />
+<Property365Icon Icon="g_translate" />
+<Property365Icon Icon="gavel" />
+<Property365Icon Icon="get_app" />
+<Property365Icon Icon="gif" />
+<Property365Icon Icon="grade" />
+<Property365Icon Icon="group_work" />
+<Property365Icon Icon="help" />
+<Property365Icon Icon="help_outline" />
+<Property365Icon Icon="highlight_off" />
+<Property365Icon Icon="history" />
+<Property365Icon Icon="home" />
+<Property365Icon Icon="hourglass_empty" />
+<Property365Icon Icon="hourglass_full" />
+<Property365Icon Icon="http" />
+<Property365Icon Icon="https" />
+<Property365Icon Icon="input" />
+<Property365Icon Icon="invert_colors" />
+<Property365Icon Icon="label" />
+<Property365Icon Icon="label_outline" />
+<Property365Icon Icon="language" />
+<Property365Icon Icon="launch" />
+<Property365Icon Icon="lightbulb_outline" />
+<Property365Icon Icon="line_style" />
+<Property365Icon Icon="line_weight" />
+<Property365Icon Icon="list" />
+<Property365Icon Icon="lock" />
+<Property365Icon Icon="lock_open" />
+<Property365Icon Icon="lock_outline" />
+<Property365Icon Icon="loyalty" />
+<Property365Icon Icon="markunread_mailbox" />
+<Property365Icon Icon="motorcycle" />
+<Property365Icon Icon="note_add" />
+<Property365Icon Icon="offline_pin" />
+<Property365Icon Icon="opacity" />
+<Property365Icon Icon="open_in_browser" />
+<Property365Icon Icon="open_in_new" />
+<Property365Icon Icon="open_with" />
+<Property365Icon Icon="pageview" />
+</div>
+
+<h4>Syled icons</h4>
+<Property365DataList TItem="IconStyle" Data="@(Enum.GetValues<IconStyle>())" WrapItems="true">
+    <Template Context="style">
+        <div>
+            <h5>@style.ToString()</h5>
+            <Property365Icon Icon="dashboard" IconStyle="@style" />
+            <Property365Icon Icon="open_with" IconStyle="@style" />
+
+        </div>
+    </Template>
+
+</Property365DataList>
+
+<style>
+    .icons-preview .rzi {
+        margin: 1rem;
+    }
+</style>
+<Property365Link Path="https://material.io/tools/icons/" Text="See all Material icons" target="_blank" />
+</Property365ComponentContainer>

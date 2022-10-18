@@ -1,0 +1,96 @@
+﻿@page "/master-detail-hierarchy"
+
+@using Property365.Web.Components.Demos.Data
+@using Property365.Web.Components.Demos.Models.Northwind
+@using Microsoft.EntityFrameworkCore
+
+@inject NorthwindContext dbContext
+
+<h1>DataGrid Master Detail Hierarchy</h1>
+
+<p>This page demonstrates how to use templates to create a Property365 Blazor DataGrid hierarchy.</p>
+
+<Property365ComponentContainer Name="DataGrid" Source="MasterDetailHierarchy" Heading="false">
+    <Property365DataGrid @ref="grid" AllowFiltering="true" AllowPaging="true" PageSize="3" AllowSorting="true" RowRender="@RowRender" ExpandMode="DataGridExpandMode.Single"
+                Data="@orders" TItem="Order">
+        <Template Context="order">
+            <Property365Card Style="margin-bottom:20px">
+                Company:
+                <b>@order.Customer?.CompanyName</b>
+            </Property365Card>
+            <Property365Tabs>
+                <Tabs>
+                    <Property365TabsItem Text="Order Details">
+                        <Property365DataGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@order.OrderDetails" TItem="OrderDetail">
+                            <Columns>
+                                <Property365DataGridColumn TItem="OrderDetail" Property="Order.CustomerID" Title="Order" />
+                                <Property365DataGridColumn TItem="OrderDetail" Property="Product.ProductName" Title="Product" />
+                                <Property365DataGridColumn TItem="OrderDetail" Property="UnitPrice" Title="Unit Price">
+                                    <Template Context="detail">
+                                        @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.UnitPrice)
+                                    </Template>
+                                </Property365DataGridColumn>
+                                <Property365DataGridColumn TItem="OrderDetail" Property="Quantity" Title="Quantity" />
+                                <Property365DataGridColumn TItem="OrderDetail" Property="Discount" Title="Discount">
+                                    <Template Context="detail">
+                                        @String.Format("{0}%", detail.Discount * 100)
+                                    </Template>
+                                </Property365DataGridColumn>
+                            </Columns>
+                        </Property365DataGrid>
+                    </Property365TabsItem>
+                    <Property365TabsItem Text="Products">
+                        <Property365DataList WrapItems="true" AllowPaging="true" Data="@order.OrderDetails" TItem="OrderDetail" PageSize="10">
+                            <Template Context="detail">
+                                <Property365Card Style="width:100px; height:100px">
+                                    <h4 class="text-thin">Product</h4>
+                                    <b>@detail?.Product?.ProductName</b>
+                                </Property365Card>
+                            </Template>
+                        </Property365DataList>
+                    </Property365TabsItem>
+                </Tabs>
+            </Property365Tabs>
+        </Template>
+        <Columns>
+            <Property365DataGridColumn TItem="Order" Property="OrderID" Title="Order ID" Width="120px" />
+            <Property365DataGridColumn TItem="Order" Property="Customer.CompanyName" Title="Customer" Width="200px" />
+            <Property365DataGridColumn TItem="Order" Property="Employee.LastName" Title="Employee" Width="200px">
+                <Template Context="order">
+                    <Property365Image Path="@order.Employee?.Photo" style="width: 32px; height: 32px; border-radius: 16px; margin-right: 6px;" />
+                    @order.Employee?.FirstName @order.Employee?.LastName
+                </Template>
+            </Property365DataGridColumn>
+            <Property365DataGridColumn TItem="Order" Property="OrderDate" Title="Order Date" FormatString="{0:d}" Width="140px" />
+            <Property365DataGridColumn TItem="Order" Property="RequiredDate" Title="Required Date" FormatString="{0:d}" Width="140px" />
+            <Property365DataGridColumn TItem="Order" Property="ShippedDate" Title="Shipped Date" FormatString="{0:d}" Width="140px" />
+            <Property365DataGridColumn TItem="Order" Property="ShipName" Title="Ship Name" />
+            <Property365DataGridColumn TItem="Order" Property="ShipCountry" Title="Ship Country" />
+        </Columns>
+    </Property365DataGrid>
+</Property365ComponentContainer>
+@code {
+    IEnumerable<Order> orders;
+    Property365DataGrid<Order> grid;
+
+    protected override void OnInitialized()
+    {
+        orders = dbContext.Orders.Include("Customer").Include("Employee").Include("OrderDetails").Include("OrderDetails.Product").ToList();
+    }
+
+    void RowRender(RowRenderEventArgs<Order> args)
+    {
+        args.Expandable = args.Data.ShipCountry == "France" || args.Data.ShipCountry == "Brazil";
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            grid.ExpandRow(orders.FirstOrDefault());
+            StateHasChanged();
+        }
+
+        base.OnAfterRender(firstRender);
+    }
+}

@@ -1,0 +1,61 @@
+@page "/tree-checkboxes"
+@using Microsoft.EntityFrameworkCore
+@using Property365.Web.Components.Demos.Models.Northwind
+@inject Property365.Web.Components.Demos.Data.NorthwindContext Northwind
+
+<h1>Tree checkboxes</h1>
+<p>Get or set the selected items of Property365Tree</p>
+<Property365ComponentContainer Name="Tree" Source="TreeCheckBoxes" Heading="false">
+<div class="row my-5">
+    <div class="col-lg-6 offset-lg-3">
+        <Property365Card>
+            <Property365Tree AllowCheckBoxes="true" @bind-CheckedValues=@CheckedValues Style="width: 100%; height: 300px" Data=@categories>
+                <Property365TreeLevel TextProperty="CategoryName" ChildrenProperty="Products" />
+                <Property365TreeLevel TextProperty="ProductName" HasChildren=@(product => false) />
+            </Property365Tree>
+        </Property365Card>
+    </div>
+</div>
+</Property365ComponentContainer>
+
+<EventConsole @ref=@console Class="mt-4" />
+
+@code {
+    IEnumerable<Category> categories;
+    IEnumerable<object> checkedValues;
+
+    IEnumerable<object> CheckedValues
+    {
+        get => checkedValues;
+        set
+        {
+            checkedValues = value;
+            if (checkedValues != null)
+            {
+                console.Log($"CheckedValues Changed {string.Join(Environment.NewLine, value.Select(GetText))}");
+            }
+        }
+    }
+
+    string GetText(object data)
+    {
+        if (data is Category category)
+        {
+            return category.CategoryName;
+        }
+
+        if (data is Product product)
+        {
+            return product.ProductName;
+        }
+
+        return string.Empty;
+    }
+
+    EventConsole console;
+
+    protected override void OnInitialized()
+    {
+        categories = Northwind.Categories.Include(c => c.Products);
+    }
+}

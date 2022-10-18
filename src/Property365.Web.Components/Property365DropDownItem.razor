@@ -1,0 +1,79 @@
+﻿@using Property365.Web.Components
+@using System.Linq.Dynamic.Core
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.JSInterop
+
+@typeparam TValue
+
+
+@if (DropDown.Multiple)
+{
+    <li class="@GetComponentCssClass("rz-multiselect") "
+        aria-label="@PropertyAccess.GetItemOrValueFromProperty(Item, DropDown.TextProperty)" style="display: block;white-space: nowrap;"
+    @onmousedown:preventDefault @onmousedown="args=>SelectItem(args,false)"
+        @onclick:preventDefault @onclick="args=>SelectItem(args,true)">
+        <div class="rz-chkbox">
+            <div class="@(DropDown.isSelected(Item) ? "chkbox-box rz-state-active" : "chkbox-box") @(Disabled ? " rz-state-disabled  " : "")">
+                <span class="@(DropDown.isSelected(Item) ? "rz-chkbox-icon  rzi rzi-check" : "rz-chkbox-icon")"></span>
+            </div>
+        </div>
+        <span>
+            @if (DropDown.Template != null)
+            {
+                @DropDown.Template(Item)
+            }
+            else
+            {
+                @PropertyAccess.GetItemOrValueFromProperty(Item, DropDown.TextProperty)
+            }
+        </span>
+    </li>
+}
+else
+{
+    <li role="option" class="@GetComponentCssClass("dropdown-item relative hover:bg-light-900 focus:bg-blue-50  active:bg-blue-50 py-2.5 px-4 hover:cursor-pointer")" aria-label="@PropertyAccess.GetItemOrValueFromProperty(Item, DropDown.TextProperty)"
+    @onmousedown:preventDefault @onmousedown="args=>SelectItem(args,false)"
+    @onclick:preventDefault @onclick="args=>SelectItem(args,true)">
+        <span>
+            @if (DropDown.Template != null)
+            {
+                @DropDown.Template(Item)
+            }
+            else
+            {
+                @PropertyAccess.GetItemOrValueFromProperty(Item, DropDown.TextProperty)
+            }
+       </span>
+    </li>
+}
+@code {
+    [Parameter]
+    public Property365DropDown<TValue> DropDown { get; set; }
+
+    [Parameter]
+    public bool Disabled { get; set; }
+
+    [Parameter]
+    public object Item { get; set; }
+
+    async Task SelectItem(MouseEventArgs args,bool isclick)
+    {
+        var condition = DropDown.LoadData.HasDelegate && !string.IsNullOrEmpty(DropDown.searchText);
+
+        if (!Disabled && isclick ? !condition : condition)
+        {
+            await DropDown.OnSelectItemInternal(Item);
+        }
+    }
+
+    protected string GetComponentCssClass(string prefix)
+    {
+        string result = $"{prefix}-item ";
+        if (Disabled)
+            result += "rz-state-disabled ";
+        else if (DropDown.isSelected(Item))
+            result += "rz-state-highlight ";
+
+        return result;
+    }
+}

@@ -1,0 +1,25 @@
+﻿@inherits Property365ComponentWithChildren
+
+@if (Visible)
+{
+    <ul @ref="@Element" style="@Style" @attributes="Attributes" class="@GetCssClass()" id="@GetId()">
+        <li class="rz-navigation-item">
+            <div class="rz-navigation-item-wrapper" onclick="Property365Components.toggleMenuItem(this) ">
+                <div class="rz-navigation-item-link">
+                    <div class="item-text">
+                        @if (Template != null)
+                        {
+                            @Template
+                        }
+                    </div>
+                    <Property365Icon Icon="more_vert"  class="text-3xl"/>
+                </div>
+            </div>
+            <ul class="rz-navigation-menu z-10 w-44 bg-white rounded shadow dark:bg-gray-700 mt-4" style="@contentStyle">
+                <CascadingValue Value=this>
+                    @ChildContent
+                </CascadingValue>
+            </ul>
+        </li>
+    </ul>
+}

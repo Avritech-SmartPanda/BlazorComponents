@@ -1,0 +1,77 @@
+﻿@page "/checkboxlist"
+
+<Property365ComponentContainer Name="CheckBoxList">
+    <div class="row px-3">
+        <div class="col-lg-6 p-3 d-flex">
+            <Property365Card Style="width: 100%;">
+                <h4 class="mb-4">Horizontal Orientation</h4>
+                <Property365CheckBoxList @bind-Value=@values TValue="int" Change=@(args => OnChange(args, "CheckBoxList with horizontal orientation"))>
+                    <Items>
+                        <Property365CheckBoxListItem Text="Orders" Value="1" />
+                        <Property365CheckBoxListItem Text="Employees" Value="2" />
+                        <Property365CheckBoxListItem Text="Customers" Value="3" />
+                    </Items>
+                </Property365CheckBoxList>
+                <h4 class="mt-4 mb-2">Vertical Orientation</h4>
+                <Property365CheckBoxList @bind-Value=@values TValue="int" Orientation="Orientation.Vertical" Change=@(args => OnChange(args, "CheckBoxList with vertical orientation"))>
+                    <Items>
+                        <Property365CheckBoxListItem Text="Orders" Value="1" />
+                        <Property365CheckBoxListItem Text="Employees" Value="2" />
+                        <Property365CheckBoxListItem Text="Customers" Value="3" />
+                    </Items>
+                </Property365CheckBoxList>
+            </Property365Card>
+        </div>
+        <div class="col-lg-6 p-3 d-flex">
+            <Property365Card Style="width: 100%;">
+                <h4 class="mb-4">CheckBoxList with items from data</h4>
+                <Property365CheckBoxList @bind-Value=@values TValue="int" Orientation="Orientation.Vertical" Change=@(args => OnChange(args, "CheckBoxList with items from data"))
+                            Data="@data" TextProperty="Name" ValueProperty="Id" />
+            </Property365Card>
+        </div>
+        <div class="col-lg-6 p-3 d-flex">
+            <Property365Card Style="width: 100%;">
+                <h4 class="mb-4">CheckBoxList with declared items and items from data</h4>
+                <Property365CheckBoxList @bind-Value=@values Data="@data" TextProperty="Name" ValueProperty="Id" TValue="int" Orientation="Orientation.Vertical" Change=@(args => OnChange(args, "CheckBoxList with declared items and items from data"))>
+                    <Items>
+                        <Property365CheckBoxListItem Text="Static item" Value="0" />
+                    </Items>
+                </Property365CheckBoxList>
+            </Property365Card>
+        </div>
+        <div class="col-lg-6 p-3 d-flex">
+            <Property365Card Style="width: 100%;">
+                <h4 class="mb-4">Disabled CheckBoxList</h4>
+                <Property365CheckBoxList @bind-Value=@values Disabled="true" TValue="int" Orientation="Orientation.Vertical">
+                    <Items>
+                        <Property365CheckBoxListItem Text="Orders" Value="1" />
+                        <Property365CheckBoxListItem Text="Employees" Value="2" />
+                        <Property365CheckBoxListItem Text="Customers" Value="3" />
+                    </Items>
+                </Property365CheckBoxList>
+            </Property365Card>
+        </div>
+    </div>
+</Property365ComponentContainer>
+
+<EventConsole @ref=@console Class="mt-4" />
+
+@code {
+    public class MyObject
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    IEnumerable<MyObject> data = new MyObject[] {
+        new MyObject(){ Id = 1 , Name = "Orders"}, new MyObject() { Id = 2 , Name = "Employees"}, new MyObject() { Id = 3 , Name = "Customers" } };
+
+    IEnumerable<int> values = new int[] { 1 };
+
+    EventConsole console;
+
+    void OnChange(IEnumerable<int> value, string name)
+    {
+        console.Log($"{name} value changed to {string.Join(", ", value)}");
+    }
+}

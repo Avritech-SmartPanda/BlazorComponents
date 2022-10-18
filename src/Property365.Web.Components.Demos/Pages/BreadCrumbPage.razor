@@ -1,0 +1,32 @@
+﻿@page "/breadcrumb"
+
+<Property365ComponentContainer Name="BreadCrumb" Source="BreadCrumb" Documentation="false">
+    <div class="row px-3">
+        <div class="col-md-6 p-3">
+            <Property365Card class="pb-4">
+                <Property365Heading Size="H4" Text="Default Property365 BreadCrumb" Class="mb-4" />
+                <Property365BreadCrumb>
+                    <Property365BreadCrumbItem Path="/" Text="Components" />
+                    <Property365BreadCrumbItem Path="/badge" Text="Badge" />
+                    <Property365BreadCrumbItem Icon="add" Text="Add" />
+                </Property365BreadCrumb>
+            </Property365Card>
+        </div>
+        <div class="col-md-6 p-3">
+            <Property365Card class="pb-4">
+                <Property365Heading Size="H4" Text="With Template" Class="mb-4" />
+                <Property365BreadCrumb>
+                    <Template Context="item">
+                        <Property365Badge Text="@item.Text" IsPill="true" />
+                    </Template>
+                    <ChildContent>
+                        <Property365BreadCrumbItem Path="/" Text="Components" />
+                        <Property365BreadCrumbItem Path="/badge" Text="Badge" />
+                        <Property365BreadCrumbItem Icon="add" Text="Add" />
+                    </ChildContent>
+                </Property365BreadCrumb>
+            </Property365Card>
+        </div>
+    </div>
+</Property365ComponentContainer>
+

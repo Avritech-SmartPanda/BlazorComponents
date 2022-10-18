@@ -1,0 +1,231 @@
+﻿@page "/dropdown"
+
+@using Property365.Web.Components.Demos.Data
+@using Property365.Web.Components.Demos.Models.Northwind
+@using Microsoft.EntityFrameworkCore
+
+@inherits DbContextPage
+
+<Property365ComponentContainer Name="DropDown">
+    <div class="container-fluid">
+        <div class="grid grid-cols-2 gap-8"> 
+                <Property365Card>
+                    <Property365Text TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Binding to simple collection</Property365Text>
+                    <Property365DropDown AllowClear="true" TValue="string" Class="w-100" 
+                                    Data=@(customers.Select(c => c.CompanyName).Distinct())
+                                    Change=@(args => OnChange(args, "DropDown")) />
+                </Property365Card>
+        
+                <Property365Card>
+                    <Property365Text TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Disabled DropDown</Property365Text>
+                    <div style="display: flex; align-items: center">
+                        <Property365DropDown Disabled=@disabled AllowClear="true" TValue="string" Class="w-100" 
+                                        Data=@(customers.Select(c => new { CustomerID = c.CustomerID, CompanyName = c.CompanyName }).Distinct())
+                                        TextProperty="CompanyName" ValueProperty="CustomerID" Change=@(args => OnChange(args, "DropDown")) />
+                        <Property365Switch style="margin-left: 1rem" @bind-Value=@disabled />
+                    </div>
+                </Property365Card>
+            
+                <Property365Card>
+                    <Property365Text TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Virtualization using IQueryable</Property365Text>
+                    <Property365DropDown AllowClear="true" TValue="string" AllowVirtualization="true" Class="w-100" 
+                                    AllowFiltering="true" Data=@customers TextProperty="CompanyName" ValueProperty="CustomerID"
+                                    Change=@(args => OnChange(args, "DropDown with virtualization")) />
+                </Property365Card>
+            
+                <Property365Card>
+                    <Property365Text TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Virtualization using LoadData event</Property365Text>
+                    <Property365DropDown AllowClear="true" TValue="string" AllowVirtualization="true" Class="w-100" 
+                                    LoadData=@LoadDataVirtualization AllowFiltering="true" Count="@count"
+                                    Data=@customCustomersDataVirtualization TextProperty="CompanyName" ValueProperty="CustomerID"
+                                    Change=@(args => OnChange(args, "DropDown with virtualization")) />
+                </Property365Card>
+            
+                <Property365Card>
+                    <Property365Text TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Custom filter operator</Property365Text>
+                    <Property365DropDown AllowClear="true" TValue="string" Class="w-100" 
+                                    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith" AllowFiltering="true"
+                                    Data=@customers TextProperty="CompanyName" ValueProperty="CustomerID" Change=@(args => OnChange(args, "DropDown with custom filter operator")) />
+                </Property365Card>
+        
+                <Property365Card>
+                    <Property365Text TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Custom filtering</Property365Text>
+                    <Property365DropDown AllowClear="true" TValue="string" Class="w-100" 
+                                    LoadData=@LoadData AllowFiltering="true"
+                                    Data=@customCustomersData TextProperty="CompanyName" ValueProperty="CustomerID"
+                                    Change=@(args => OnChange(args, "DropDown with custom filtering")) />
+                </Property365Card>
+        
+                <Property365Card>
+                    <Property365Text TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">DropDown with placeholder</Property365Text>
+                    <Property365DropDown AllowClear="true" TValue="string" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true" Class="w-100" 
+                                    Placeholder="Select..." Data=@customers TextProperty="CompanyName" ValueProperty="CustomerID" Change=@(args => OnChange(args, "DropDown with placeholder")) />
+                </Property365Card>
+        
+                <Property365Card>
+                    <Property365Text TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">DropDown with template</Property365Text>
+                    <Property365DropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value=@value Placeholder="Select..."
+                                    Data=@customers TextProperty="CompanyName" ValueProperty="CustomerID" Change=@(args => OnChange(args, "DropDown with placeholder")) Class="w-100" >
+                        <Template>
+                            Company: @((context as Customer).CompanyName)
+                        </Template>
+                    </Property365DropDown>
+                </Property365Card>
+            
+                <Property365Card>
+                    <Property365Text TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Multiple selection</Property365Text>
+                    <Property365DropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                    @bind-Value=@multipleValues Multiple="true" Placeholder="Select..." Data=@customers TextProperty="CompanyName" ValueProperty="CustomerID"
+                                    Change=@(args => OnChange(args, "DropDown with multiple selection")) Class="w-100" />
+                </Property365Card>
+            
+                <Property365Card>
+                    <Property365Text TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Bind Value to model property</Property365Text>
+                    <Property365DropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Data=@products @bind-Value=@myModel.MyValue
+                                    TextProperty="ProductName" ValueProperty="ProductID" Change=@(args => ChangeBound(args, "DropDown with bound Value")) Class="w-100" />
+                </Property365Card>
+        
+                <Property365Card>
+                    <Property365Text TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">With Disabled item</Property365Text>
+                    <Property365DropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Data=@products @bind-Value=@myModelDisabled.MyValue
+                                    TextProperty="ProductName" ValueProperty="ProductID" DisabledProperty="Discontinued" Change=@(args => ChangeBound(args, "DropDown with bound Value")) Class="w-100" />
+                </Property365Card>
+            
+                <Property365Card>
+                    <Property365Text TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Multiple with Disabled item</Property365Text>
+                    <Property365DropDown AllowClear="true" AllowFiltering="true" Multiple="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Data=@products @bind-Value=@multipleValuesdisabled
+                                    TextProperty="ProductName" ValueProperty="ProductID" DisabledProperty="Discontinued" Change=@(args => OnChangeDisabled(args, "DropDown with multiple selection")) Class="w-100" />
+                </Property365Card>
+        
+                <Property365Card>
+                    <Property365Text TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Multiple selection with chips</Property365Text>
+                    <Property365DropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Data=@products @bind-Value=@multipleValuesChip
+                                    TextProperty="ProductName" ValueProperty="ProductID" DisabledProperty="Discontinued" Change=@(args => OnChangeDisabled(args, "DropDown with multiple selection")) Class="w-100" />
+                </Property365Card>
+            
+                <Property365Card>
+                    <Property365Text TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">DropDown with groups</Property365Text>
+                        <Property365DropDown TValue="int" AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                        Data=@groupedData DisabledProperty="IsGroup" ValueProperty="OrderID"
+                                        Change=@(args => OnChange(args, "DropDown with groups")) Class="w-100">
+                        <Template>
+                                @(context.CompanyName ?? $"OrderID: {context.OrderID}, Order date: {string.Format("{0:d}", context.OrderDate)}")
+                        </Template>
+                        </Property365DropDown>
+                </Property365Card>
+        
+        </div>
+    </div>
+</Property365ComponentContainer>
+
+<EventConsole @ref=@console Class="mt-4" />
+
+@code {
+     bool disabled = true;
+
+    IEnumerable<Order> orders;
+    IEnumerable<Customer> customers;
+    IEnumerable<Customer> customCustomersData;
+    IEnumerable<Product> products;
+
+    MyObject myModel = new MyObject();
+    MyObject myModelDisabled = new MyObject();
+
+    int count;
+    IEnumerable<Customer> customCustomersDataVirtualization;
+
+    IEnumerable<string> multipleValues = new string[] { "ALFKI", "ANATR" };
+    string value = "ALFKI";
+
+    IEnumerable<int> multipleValuesdisabled = new int[] { 1,2 };
+
+    IEnumerable<int> multipleValuesChip = new int[] { 1, 2, 3, 4, 6, 7, 8 };
+
+    EventConsole console;
+
+    IEnumerable<GroupData> groupedData;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        customers = dbContext.Customers.ToList();
+        products = dbContext.Products.ToList();
+        orders = dbContext.Orders.Where(o => o.CustomerID != null).Include("Customer").ToList();
+
+        groupedData = orders.GroupBy(g => g.Customer.CompanyName)
+            .SelectMany(i => new GroupData[] { new GroupData() { CompanyName = i.Key } }
+                .Concat(i.Select(o => 
+                    new GroupData() 
+                    { 
+                        OrderID = o.OrderID,
+                        OrderDate = o.OrderDate
+                    }))).ToList();
+    }
+
+    class GroupData
+    { 
+        public string CompanyName { get; set; }
+        public int OrderID { get; set; }
+        public DateTime? OrderDate { get; set; }
+        public bool IsGroup { get { return CompanyName != null; } }
+    }
+
+    void OnChange(object value, string name)
+    {
+        var str = value is IEnumerable<object> ? string.Join(", ", (IEnumerable<object>)value) : value;
+
+        console.Log($"{name} value changed to {str}");
+    }
+
+    void OnChangeDisabled(object value, string name)
+    {
+        var str = value is IEnumerable<int> ? string.Join(", ", (IEnumerable<int>)value) : value;
+
+        console.Log($"{name} value changed to {str}");
+    }
+
+    void ChangeBound(object value, string name)
+    {
+        console.Log($"{name} value changed to {myModel.MyValue}");
+    }
+
+    class MyObject
+    {
+        public int? MyValue { get; set; } = 3;
+    }
+
+    void LoadData(LoadDataArgs args)
+    {
+        var query = dbContext.Customers.AsQueryable();
+
+        if (!string.IsNullOrEmpty(args.Filter))
+        {
+            query = query.Where(c => c.CustomerID.ToLower().Contains(args.Filter.ToLower()) || c.ContactName.ToLower().Contains(args.Filter.ToLower()));
+        }
+
+        console.Log($"LoadData with filter: {args.Filter}");
+
+        customCustomersData = query.ToList();
+
+        InvokeAsync(StateHasChanged);
+    }
+
+    void LoadDataVirtualization(LoadDataArgs args)
+    {
+        var query = dbContext.Customers.AsQueryable();
+
+        if (!string.IsNullOrEmpty(args.Filter))
+        {
+            query = query.Where(c => c.CustomerID.ToLower().Contains(args.Filter.ToLower()) || c.ContactName.ToLower().Contains(args.Filter.ToLower()));
+        }
+
+        console.Log($"LoadData with virtualization: Skip:{args.Skip}, Top:{args.Top}, Filter:{args.Filter}");
+
+        count = query.Count();
+
+        customCustomersDataVirtualization = query.Skip(args.Skip.HasValue ? args.Skip.Value : 0).Take(args.Top.HasValue ? args.Top.Value : 10).ToList();
+
+        InvokeAsync(StateHasChanged);
+    }
+}

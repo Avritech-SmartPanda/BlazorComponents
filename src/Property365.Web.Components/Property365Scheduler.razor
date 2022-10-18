@@ -1,0 +1,32 @@
+@using Property365.Web.Components
+@using System.Globalization;
+@using System.Linq.Dynamic.Core;
+@using Microsoft.JSInterop;
+@inherits Property365Component
+
+@typeparam TItem
+@implements IScheduler
+
+@if (Visible)
+{
+<CascadingValue Value="@this">
+    @ChildContent
+</CascadingValue>
+<div @ref=Element  style=@Style @attributes=@Attributes class=@GetCssClass() id=@GetId()>
+    <div class="rz-scheduler-nav">
+        <div class="rz-scheduler-nav-prev-next">
+            <button class="rz-button rz-prev" @onclick=@OnPrev><Property365Icon Icon="chevron_left" /></button>
+            <button class="rz-button rz-next" @onclick=@OnNext><Property365Icon Icon="chevron_right" /></button>
+            <button class="rz-button rz-today" @onclick=@OnToday>@TodayText</button>
+        </div>
+        <div class="rz-scheduler-nav-title">@SelectedView?.Title</div>
+        <div class="rz-scheduler-nav-views">
+        @foreach (var view in Views)
+        {
+            <button class="@($"rz-button{(IsSelected(view)? " state-active" : "")}")" @onclick=@(args => OnChangeView(view))><Property365Icon Icon=@view.Icon /><span>@view.Text</span></button>
+        }
+        </div>
+    </div>
+    @SelectedView?.Render()
+</div>
+}

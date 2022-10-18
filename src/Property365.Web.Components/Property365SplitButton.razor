@@ -1,0 +1,36 @@
+﻿@using Microsoft.JSInterop
+
+@inherits Property365ComponentWithChildren
+@if (Visible)
+{
+    <div @ref="@Element" style="@Style" @attributes="Attributes" class="@GetCssClass()" id="@GetId()">
+        <button disabled="@Disabled" class="@getButtonCss() " type="button" @onclick="@OnClick">
+            @if (!string.IsNullOrEmpty(@Icon))
+            {
+                <Property365Icon Icon="@Icon" aria-hidden="true" class="relative top-1"/>  
+            }
+            @if (!string.IsNullOrEmpty(Image))
+            {
+                <img class="rz-button-icon-left rzix relative" src="@Image" />
+            }
+            @if (!string.IsNullOrEmpty(Text))
+            {
+                <span class="relative">@Text </span>
+            }
+            else
+            {
+                <span>&nbsp;</span>
+            }
+        </button>
+        <button onclick="@OpenPopupScript() " class="@getPopupButtonCss() " type="button">
+            <Property365Icon Icon="arrow_drop_down" aria-hidden="true" class="relative text-sm"/>  
+        </button>
+        <div id="@PopupID" class="rz-splitbutton-menu">
+            <ul class="rz-menu-list">
+                <CascadingValue Value=this>
+                    @ChildContent
+                </CascadingValue>
+            </ul>
+        </div>
+    </div>
+}

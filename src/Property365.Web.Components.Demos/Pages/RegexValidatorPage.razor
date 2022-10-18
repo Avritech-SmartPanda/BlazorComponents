@@ -1,0 +1,65 @@
+@page "/regexvalidator"
+@using Property365.Web.Components
+@using System.Text.Json
+
+<Property365ComponentContainer Name="RegexValidator">
+<div class="container my-4">
+    <div class="row">
+        <div class="col">
+            <Property365Card Class="w-100 mb-4" >
+            <Property365CheckBox @bind-Value=@popup Name="popup"></Property365CheckBox>
+                <Property365Label Text="Display validators as popup" For="popup" Style="margin-left: 8px; vertical-align: middle;" />
+            </Property365Card>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+            <Property365TemplateForm TItem="Model" Data=@model Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
+                <Property365Fieldset Text="Personal information">
+                    <div class="row mb-5">
+                        <div class="col-md-4">
+                            <Property365Label Text="ZIP" />
+                            <small style="display: block">(5 digit ZIP code)</small>
+                        </div>
+                        <div class="col">
+                            <Property365TextBox style="display: block" Name="ZIP" @bind-Value=@model.Zip Class="w-100" />
+                            <Property365RequiredValidator Component="ZIP" Text="ZIP code is required" Popup=@popup Style="position: absolute"/>
+                            <Property365RegexValidator Component="ZIP" Text="ZIP code must be 5 digits" Pattern="\d{5}" Popup=@popup Style="position: absolute" />
+                        </div>
+                    </div>
+                    <Property365Button ButtonType="ButtonType.Submit" Text="Submit"></Property365Button>
+                </Property365Fieldset>
+            </Property365TemplateForm>
+        </div>
+    </div>
+</div>
+</Property365ComponentContainer>
+
+<EventConsole @ref=@console Class="mt-4" />
+
+@code {
+    class Model
+    {
+        public string Zip { get; set; }
+    }
+
+    bool popup;
+
+    Model model = new Model();
+    EventConsole console;
+
+    void Log(string eventName, string value)
+    {
+        console.Log($"{eventName}: {value}");
+    }
+
+    void OnSubmit(Model model)
+    {
+        Log("Submit", JsonSerializer.Serialize(model, new JsonSerializerOptions() {  WriteIndented = true }));
+    }
+
+    void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
+    {
+        Log("InvalidSubmit", JsonSerializer.Serialize(args, new JsonSerializerOptions() {  WriteIndented = true }));
+    }
+}

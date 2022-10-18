@@ -1,0 +1,89 @@
+@page "/styling-chart"
+@using System.Globalization
+
+<h1>Property365 Blazor Chart Styling</h1>
+<Property365ComponentContainer Name="Chart" Source="StylingChart" Heading="false">
+    <div class="container">
+        <Property365Card Class="mt-4 w-100 mb-4 d-flex align-items-center" >
+            <Property365Label Text="Color scheme:" Style="margin-right: 8px; vertical-align: middle;" />
+            <Property365DropDown Data="@colorSchemes" @bind-Value="@colorScheme" />
+        </Property365Card>
+        <div class="row my-5">
+            <div class="col-sm-12 col-lg-8">
+                <Property365Chart ColorScheme="@colorScheme">
+                    @for (var year = 2013; year <= 2020; year++)
+                    {
+                        var currentYearRevenue = revenue.Where(r => r.Year == year).ToList();
+                        <Property365ColumnSeries Data="@currentYearRevenue" CategoryProperty="Quarter" Title="@year.ToString()" ValueProperty="Revenue" />
+                    }
+                    <Property365ColumnOptions Margin="0" />
+                    <Property365ValueAxis Formatter="@FormatAsUSD" />
+                </Property365Chart>
+            </div>
+            <div class="col-sm-12 col-lg-4">
+                <Property365Chart ColorScheme="@colorScheme">
+                    <Property365PieSeries Data="@revenue.Where(r => r.Year == 2020)" Title="Revenue" CategoryProperty="Quarter" ValueProperty="Revenue" />
+                </Property365Chart>
+            </div>
+        </div>
+        <h3>Custom colors and styling</h3>
+        <div class="row my-5">
+            <div class="col-sm-12">
+                <Property365Chart>
+                    <Property365AreaSeries Stroke="rgb(236,72,127)" StrokeWidth="2" Fill="rgba(236,72,127,.5)" Data="@revenue.Where(r => r.Year == 2020)" CategoryProperty="Quarter" ValueProperty="Revenue">
+                        <ChildContent>
+                            <Property365Markers MarkerType="MarkerType.Circle" Fill="#fff" Stroke="rgba(236,72,127)" StrokeWidth="2" Size="8" />
+                        </ChildContent>
+                        <TooltipTemplate Context="data">
+                            Revenue for <span>@data.Quarter</span> 2020: <strong>@data.Revenue.ToString("C0", CultureInfo.CreateSpecificCulture("en-US"))</strong>
+                        </TooltipTemplate>
+                    </Property365AreaSeries>
+                    <Property365CategoryAxis>
+                        <Property365GridLines Visible="true" Stroke="#ccc" LineType="LineType.Dashed" />
+                    </Property365CategoryAxis>
+                    <Property365ValueAxis>
+                        <Property365GridLines Visible="true" />
+                    </Property365ValueAxis>
+                    <Property365ChartTooltipOptions Style="border: 1px solid rgb(236,72,127); background: #eee; color: #000;" />
+                    <Property365Legend Visible="false" />
+                </Property365Chart>
+            </div>
+        </div>
+    </div>
+</Property365ComponentContainer>
+@code {
+    IEnumerable<ColorScheme> colorSchemes = Enum.GetValues(typeof(ColorScheme)).Cast<ColorScheme>();
+    ColorScheme colorScheme = ColorScheme.Palette;
+
+    class DataItem
+    {
+        public int Year { get; set; }
+        public string Quarter { get; set; }
+        public double Revenue { get; set; }
+    }
+
+    string FormatAsUSD(object value)
+    {
+        return ((double)value).ToString("C0", CultureInfo.CreateSpecificCulture("en-US"));
+    }
+
+    IList<DataItem> revenue = new List<DataItem>();
+
+    protected override void OnInitialized()
+    {
+        var random = new Random();
+
+        for (var year = 2013; year <= 2020; year++)
+        {
+            for (var quarter = 1; quarter <= 4; quarter++)
+            {
+                revenue.Add(new DataItem
+                {
+                    Year = year,
+                    Quarter = $"Q{quarter}",
+                    Revenue = random.NextDouble() * 200000
+                });
+            }
+        }
+    }
+}

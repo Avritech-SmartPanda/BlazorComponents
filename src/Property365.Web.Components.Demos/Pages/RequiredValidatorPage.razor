@@ -1,0 +1,68 @@
+@page "/requiredvalidator"
+@using Property365.Web.Components
+@using System.Text.Json
+
+<Property365ComponentContainer Name="RequiredValidator">
+<div class="container my-4">
+    <div class="row">
+        <div class="col">
+            <Property365Card Class="w-100 mb-4" >
+            <Property365CheckBox @bind-Value=@popup Name="popup"></Property365CheckBox>
+                <Property365Label Text="Display validators as popup" For="popup" Style="margin-left: 8px; vertical-align: middle;" />
+            </Property365Card>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+            <Property365TemplateForm TItem="Model" Data=@model Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
+                <Property365Fieldset Text="Personal information">
+                    <div class="row mb-5">
+                        <div class="col-md-4">
+                            <Property365Label Text="First Name" />
+                        </div>
+                        <div class="col">
+                            <Property365TextBox style="display: block" Name="FirstName" @bind-Value=@model.FirstName Class="w-100" />
+                            <Property365RequiredValidator Component="FirstName" Text="First name is required" Popup=@popup Style="position: absolute"/>
+                        </div>
+                    </div>
+                    <div class="row mb-5">
+                        <div class="col-md-4">
+                            <Property365Label Text="Last Name" />
+                        </div>
+                        <div class="col">
+                            <Property365TextBox style="display: block" Name="LastName" @bind-Value=@model.LastName  Class="w-100" />
+                            <Property365RequiredValidator Component="LastName" Text="Last name is required" Popup=@popup Style="position: absolute"/>
+                        </div>
+                    </div>
+                    <Property365Button ButtonType="ButtonType.Submit" Text="Submit" ></Property365Button>
+                </Property365Fieldset>
+            </Property365TemplateForm>
+        </div>
+    </div>
+</div>
+</Property365ComponentContainer>
+
+<EventConsole @ref=@console Class="mt-4" />
+
+@code {
+    class Model
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+    }
+
+    bool popup;
+
+    Model model = new Model();
+    EventConsole console;
+
+    void OnSubmit(Model model)
+    {
+        console.Log($"Submit: {JsonSerializer.Serialize(model, new JsonSerializerOptions() {  WriteIndented = true })}");
+    }
+
+    void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
+    {
+        console.Log($"InvalidSubmit: {JsonSerializer.Serialize(args, new JsonSerializerOptions() {  WriteIndented = true })}");
+    }
+}

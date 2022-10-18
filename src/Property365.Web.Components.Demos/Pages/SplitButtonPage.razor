@@ -1,0 +1,219 @@
+﻿@page "/splitbutton"
+
+<Property365ComponentContainer Name="SplitButton" >
+
+    <div class="space-y-4">
+    <Property365Card class="bg-white">
+        <div class="grid grid-cols-4  gap-4">
+            <div>
+                <h4 class="mb-2">SplitButton with text</h4>
+                <Property365SplitButton Click=@(args => OnClick(args, "SplitButton with text")) Text="SplitButton">
+                    <ChildContent>
+                        <Property365SplitButtonItem Text="Item1" Value="1" />
+                        <Property365SplitButtonItem Text="Item2" Value="2" />
+                    </ChildContent>
+                </Property365SplitButton>
+            </div>
+            <div>
+                <h4 class="mb-2">SplitButton with text</h4>
+                <Property365SplitButton Click=@(args => OnClick(args, "SplitButton with text"))
+                    Text="SplitButton">
+                    <ChildContent>
+                        <Property365SplitButtonItem Text="Item1" Value="1" />
+                        <Property365SplitButtonItem Text="Item2" Value="2" />
+                    </ChildContent>
+                </Property365SplitButton>
+            </div>
+            <div>
+                <h4 class="mb-2">SplitButton with text and icon</h4>
+                <Property365SplitButton Click=@(args => OnClick(args, "SplitButton with text and icon"))
+                    Text="SplitButton" Icon="account_circle">
+                    <ChildContent>
+                        <Property365SplitButtonItem Text="Item1" Value="1" Icon="account_box" />
+                        <Property365SplitButtonItem Text="Item2" Value="2" Icon="account_balance_wallet" />
+                    </ChildContent>
+                </Property365SplitButton>
+            </div>
+            <div>
+                <h4 class="mb-2">SplitButton with icon</h4>
+                <Property365SplitButton Click=@(args => OnClick(args, "SplitButton with icon")) Icon="account_circle">
+                    <ChildContent>
+                        <Property365SplitButtonItem Text="Item1" Value="1" Icon="account_box" />
+                        <Property365SplitButtonItem Text="Item2" Value="2" Icon="account_balance_wallet" />
+                    </ChildContent>
+                </Property365SplitButton>
+            </div>
+            <div>
+                <h4 class="mb-2">Disabled SplitButton</h4>
+                <Property365SplitButton Disabled="true" Click=@(args => OnClick(args, "Disabled SplitButton"))
+                    Text="SplitButton">
+                    <ChildContent>
+                        <Property365SplitButtonItem Text="Item1" Value="1" />
+                        <Property365SplitButtonItem Text="Item2" Value="2" />
+                    </ChildContent>
+                </Property365SplitButton>
+            </div>
+        </div>
+    </Property365Card>
+
+    <Property365Card class="bg-white">
+        <h4 class="my-3">Outline buttons</h4>
+        <div class="grid grid-cols-4  gap-2">
+
+
+            <Property365SplitButton Click=@(args => OnClick(args, "SplitButton with text")) Text="Primary"
+                ButtonStyle="ButtonStyle.Primary" Outline="true">
+                <ChildContent>
+                    <Property365SplitButtonItem Text="Item1" Value="1" />
+                    <Property365SplitButtonItem Text="Item2" Value="2" />
+                </ChildContent>
+            </Property365SplitButton>
+
+            <Property365SplitButton Click=@(args => OnClick(args, "SplitButton ")) Text="Secondary"
+                ButtonStyle="ButtonStyle.Secondary" Outline="true">
+                <ChildContent>
+                    <Property365SplitButtonItem Text="Item1" Value="1" />
+                    <Property365SplitButtonItem Text="Item2" Value="2" />
+                </ChildContent>
+            </Property365SplitButton>
+
+            <Property365SplitButton Click=@(args => OnClick(args, "SplitButton ")) Text="Light"
+                ButtonStyle="ButtonStyle.Light" Outline="true">
+                <ChildContent>
+                    <Property365SplitButtonItem Text="Item1" Value="1" />
+                    <Property365SplitButtonItem Text="Item2" Value="2" />
+                </ChildContent>
+            </Property365SplitButton>
+
+            <Property365SplitButton Click=@(args => OnClick(args, "SplitButton ")) Text="Success"
+                ButtonStyle="ButtonStyle.Success" Outline="true">
+                <ChildContent>
+                    <Property365SplitButtonItem Text="Item1" Value="1" />
+                    <Property365SplitButtonItem Text="Item2" Value="2" />
+                </ChildContent>
+            </Property365SplitButton>
+
+            <Property365SplitButton Click=@(args => OnClick(args, "SplitButton ")) Text="Danger"
+                ButtonStyle="ButtonStyle.Danger" Outline="true">
+                <ChildContent>
+                    <Property365SplitButtonItem Text="Item1" Value="1" />
+                    <Property365SplitButtonItem Text="Item2" Value="2" />
+                </ChildContent>
+            </Property365SplitButton>
+
+            <Property365SplitButton Click=@(args => OnClick(args, "SplitButton ")) Text="Warning"
+                ButtonStyle="ButtonStyle.Warning" Outline="true">
+                <ChildContent>
+                    <Property365SplitButtonItem Text="Item1" Value="1" />
+                    <Property365SplitButtonItem Text="Item2" Value="2" />
+                </ChildContent>
+            </Property365SplitButton>
+
+            <Property365SplitButton Click=@(args => OnClick(args, "SplitButton ")) Text="Info"
+                ButtonStyle="ButtonStyle.Info" Outline="true">
+                <ChildContent>
+                    <Property365SplitButtonItem Text="Item1" Value="1" />
+                    <Property365SplitButtonItem Text="Item2" Value="2" />
+                </ChildContent>
+            </Property365SplitButton>
+
+            <Property365SplitButton Click=@(args => OnClick(args, "SplitButton ")) Text="Dark"
+                ButtonStyle="ButtonStyle.Dark" Outline="true">
+                <ChildContent>
+                    <Property365SplitButtonItem Text="Item1" Value="1" />
+                    <Property365SplitButtonItem Text="Item2" Value="2" />
+                </ChildContent> 
+            </Property365SplitButton>
+        </div>
+    </Property365Card>
+
+
+
+    <Property365Card class="bg-white">
+        <h4 class="my-3">Simple buttons</h4>
+        <div class="grid grid-cols-4  gap-2">
+            <Property365SplitButton Click=@(args => OnClick(args, "SplitButton with text")) Text="Primary"
+                ButtonStyle="ButtonStyle.Primary">
+                <ChildContent>
+                    <Property365SplitButtonItem Text="Item1" Value="1" />
+                    <Property365SplitButtonItem Text="Item2" Value="2" />
+                </ChildContent>
+            </Property365SplitButton>
+
+            <Property365SplitButton Click=@(args => OnClick(args, "SplitButton ")) Text="Secondary"
+                ButtonStyle="ButtonStyle.Secondary">
+                <ChildContent>
+                    <Property365SplitButtonItem Text="Item1" Value="1" />
+                    <Property365SplitButtonItem Text="Item2" Value="2" />
+                </ChildContent>
+            </Property365SplitButton>
+
+            <Property365SplitButton Click=@(args => OnClick(args, "SplitButton ")) Text="Light"
+                ButtonStyle="ButtonStyle.Light">
+                <ChildContent>
+                    <Property365SplitButtonItem Text="Item1" Value="1" />
+                    <Property365SplitButtonItem Text="Item2" Value="2" />
+                </ChildContent>
+            </Property365SplitButton>
+
+            <Property365SplitButton Click=@(args => OnClick(args, "SplitButton ")) Text="Success"
+                ButtonStyle="ButtonStyle.Success">
+                <ChildContent>
+                    <Property365SplitButtonItem Text="Item1" Value="1" />
+                    <Property365SplitButtonItem Text="Item2" Value="2" />
+                </ChildContent>
+            </Property365SplitButton>
+
+            <Property365SplitButton Click=@(args => OnClick(args, "SplitButton ")) Text="Danger"
+                ButtonStyle="ButtonStyle.Danger">
+                <ChildContent>
+                    <Property365SplitButtonItem Text="Item1" Value="1" />
+                    <Property365SplitButtonItem Text="Item2" Value="2" />
+                </ChildContent>
+            </Property365SplitButton>
+
+            <Property365SplitButton Click=@(args => OnClick(args, "SplitButton ")) Text="Warning"
+                ButtonStyle="ButtonStyle.Warning">
+                <ChildContent>
+                    <Property365SplitButtonItem Text="Item1" Value="1" />
+                    <Property365SplitButtonItem Text="Item2" Value="2" />
+                </ChildContent>
+            </Property365SplitButton>
+
+            <Property365SplitButton Click=@(args => OnClick(args, "SplitButton ")) Text="Info"
+                ButtonStyle="ButtonStyle.Info">
+                <ChildContent>
+                    <Property365SplitButtonItem Text="Item1" Value="1" />
+                    <Property365SplitButtonItem Text="Item2" Value="2" />
+                </ChildContent>
+            </Property365SplitButton>
+
+            <Property365SplitButton Click=@(args => OnClick(args, "SplitButton ")) Text="Dark"
+                ButtonStyle="ButtonStyle.Dark">
+                <ChildContent>
+                    <Property365SplitButtonItem Text="Item1" Value="1" />
+                    <Property365SplitButtonItem Text="Item2" Value="2" />
+                </ChildContent>
+            </Property365SplitButton> 
+        </div>
+    </Property365Card>
+    </div>
+</Property365ComponentContainer>
+
+<EventConsole @ref=@console Class="mt-4" />
+
+@code {
+    EventConsole console;
+
+    void OnClick(Property365SplitButtonItem item, string buttonName)
+    {
+        if (item != null)
+        {
+            console.Log($"{buttonName}, item with value {item.Value} clicked");
+        }
+        else
+        {
+            console.Log($"{buttonName} clicked");
+        }
+    }
+}

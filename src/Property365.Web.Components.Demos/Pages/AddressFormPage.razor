@@ -1,0 +1,164 @@
+﻿@page "/addressform"
+@using Property365.Web.Components
+@using Property365.Common
+@using System.Collections.Generic
+
+
+<Property365ComponentContainer Name="AddressForm">
+
+
+    @if (address == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <Property365AddressForm Data="@address" id="AddressFormID" OnValidSubmit="@((Address args) => { Submit(args); })">
+            <DataAnnotationsValidator />
+            <div class="flex flex-col py-4 sm:px-56 bg-light sm:min-h-90 ">
+                <div class="border p-2 sm:p-6 rounded-md">
+                    <div class="py-4 flex flex-col">
+                        <ul class="grid grid-cols-3 gap-4 mb-4">
+                            @foreach (var addressType in new[] { AddressTypes.Postal, AddressTypes.Physical,
+                            AddressTypes.Residential })
+                        {
+                            <li class="relative">
+                                <input name="addressType" id="@addressType" class="sr-only peer" type="radio"
+                                value="@addressType" checked="@(currentType == addressType)"
+                                @onchange="@(() => { AddressType = addressType.ToString(); currentType = addressType; })">
+                                <label for="@addressType"
+                                class="flex flex-col items-center p-5 bg-white border border-gray-300 rounded cursor-pointer  focus:outline-none  hover:bg-gray-50 peer-checked:ring-info-900  peer-checked:ring-2 peer-checked:border-transparent">
+                                    @switch (addressType.ToString())
+                                    {
+                                        case "Postal":
+                                            <Property365Icon Icon="mark_as_unread" />
+                                            break;
+                                        case "Physical":
+                                            <Property365Icon Icon="place" />
+                                            break;
+                                        case "Residential":
+                                            <Property365Icon Icon="home" />
+                                            break;
+                                    }
+                                    <span class="text-xs uppercase sm:text-base">@addressType.ToString()</span>
+                                </label>
+                            </li>
+                        }
+                    </ul>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+                        <div class="flex flex-col w-full sm: sm:col-span-2 space-y-2">
+                            <Property365Label Text="Address Line 1"
+                                class="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium leading-5 text-gray-500" />
+                            <Property365TextBox style="width: 100%;" Name="Line1" @bind-Value="Line1" />
+                            <Property365RequiredValidator Component="Line1" Text="Address line 1 is required" class="text-red-500 " />
+                        </div>
+
+                        <div class="flex flex-col w-full  sm:col-span-2 space-y-2">
+                            <Property365Label Text="Address Line 2"
+                                class="block text-sm font-medium leading-5 text-gray-500" />
+                            <Property365TextBox style="width: 100%;" Name="Line2" @bind-Value="Line2" />
+                        </div>
+
+                        <div class="flex flex-col w-full  sm:col-span-2 space-y-2">
+                            <Property365Label Text="Surburb/Township"
+                                class="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium leading-5 text-gray-500" />
+                            <Property365TextBox style="width: 100%;" Name="Township" @bind-Value="Township" />
+                            <Property365RequiredValidator Component="Township" Text="Surburb is required"
+                                class="text-red-500 " />
+                        </div>
+
+                        <div class="flex flex-col w-full space-y-2">
+                            <Property365Label Text="City"
+                                class="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium leading-5 text-gray-500" />
+                            <Property365TextBox style="width: 100%;" Name="CityTown" @bind-Value="CityTown" />
+                            <Property365RequiredValidator Component="CityTown" Text="City is required"
+                                class="text-red-500 " />
+                        </div>                        
+
+                        <div class="flex flex-col w-full space-y-2">
+                            <Property365Label Text="State/Province/Region"
+                                class="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium leading-5 text-gray-500" />
+                            <Property365TextBox style="width: 100%;" Name="Province" @bind-Value="Province" />
+                            <Property365RequiredValidator Component="Province" Text="Province is required"
+                                class="text-red-500 " />
+                        </div>
+                        <div class="flex flex-col w-full space-y-2">
+                            <Property365Label Text="Zip/Postal Code"
+                                class="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium leading-5 text-gray-500" />
+                            <div class="flex flex-col">
+                                <Property365TextBox Name="PostalCode" @bind-Value=@PostalCode />
+                                <Property365RequiredValidator Component="PostalCode" Text="Postal code is required"
+                                    class="text-red-500 " />
+                                <Property365RegexValidator Component="PostalCode" Text="Postal code must be 4 digits"
+                                    Pattern="\d{4}" class="text-red-500 " />
+                            </div>
+                        </div>
+                        <div class="flex flex-col w-full space-y-2">
+                            <Property365Label Text="Country"
+                                class="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium leading-5 text-gray-500" />
+                            <Property365DropDown @bind-Value="CountryCode" Placeholder="South Africa"
+                                Data="@countries" TextProperty="CountryCode.Value" ValueProperty="CountryCode.Key" Name="CountryCode">
+                            </Property365DropDown>
+                            <Property365RequiredValidator Component="CountryCode" Text="Country is required"
+                                class="text-red-500 " />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="py-4 sm:px-56 mt-4">
+            <div class="w-full flex  justify-end space-x-2">
+                <Property365Button ButtonType="ButtonType.Submit" form="AddressFormID" ButtonStyle="ButtonStyle.Primary"
+                    Text="Save" />
+            </div>
+        </div>
+    </Property365AddressForm>
+        
+    }
+
+</Property365ComponentContainer>
+
+<EventConsole @ref=@console Class="mt-4" />
+@code {
+    Dictionary<string, string> countries =  new Dictionary<string, string>();
+    EventConsole console;
+    public string AddressType { get; set; } = "Postal";
+    public string Line1 { get; set; }
+    public string Line2 { get; set; }
+    public string Township { get; set; }
+    public string CityTown { get; set; }
+    public string Province { get; set; }
+    public string PostalCode { get; set; }
+    public string CountryCode { get; set; }
+
+    Address address = new Address("123 Main St", "Apt. 1", "Anytown", "CA", "South Africa", "9021", "Physical", "ZA");
+    enum AddressTypes { Postal, Physical, Residential };
+    AddressTypes currentType = AddressTypes.Postal;       
+
+
+   protected override void OnInitialized()
+    {
+    countries.Add("ZA", "South Africa");
+    countries.Add("BW", "Botswana");
+    countries.Add("NA", "Namibia");
+    countries.Add("SZ", "Swaziland");
+    countries.Add("ZW", "Zimbabwe");
+    countries.Add("LS", "Lesotho");
+    countries.Add("ZM", "Zambia");
+    }
+
+    void Submit(Address arg)
+    {
+        address = address with {
+            Name = AddressType,
+            Line1 = Line1,
+            Line2 = Line2,
+            Township = Township,
+            CityTown = CityTown,
+            Province = Province,
+            PostalCode = PostalCode,
+            CountryCode = CountryCode
+        };        
+        console.Log($"{address.Name}, {address.Line1}, {address.Line2}, {address.Township}, {address.CityTown}, {address.Province}, {address.PostalCode}, {address.CountryCode}");
+    }   
+}

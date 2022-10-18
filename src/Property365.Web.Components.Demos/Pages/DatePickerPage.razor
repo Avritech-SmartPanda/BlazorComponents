@@ -1,0 +1,132 @@
+﻿@page "/datepicker"
+
+<Property365ComponentContainer Name="DatePicker">
+<div class="felx-row px-3">
+    <div class="w-full">
+        <div class="grid grid-cols-3 gap-4">
+            <div class="">
+                <Property365Card>
+                    <h4 class="mb-4">DatePicker</h4>
+                    <Property365DatePicker @bind-Value=@value DateFormat="d" Change=@(args => OnChange(args, "DatePicker", "MM/dd/yyyy")) Class="w-100" />
+                </Property365Card>
+            </div>
+            <div class="">
+                <Property365Card>
+                    <h4 class="mb-4">DatePicker with time</h4>
+                    <Property365DatePicker TValue="DateTime?" ShowTime="true" ShowSeconds="true" HoursStep="1.5" MinutesStep="5" SecondsStep="10" Change=@(args => OnChange(args, "DatePicker with time", "MM/dd/yyyy HH:mm")) DateFormat="MM/dd/yyyy HH:mm" Class="w-100" />
+                </Property365Card>
+            </div>
+            <div class="">
+                <Property365Card>
+                    <h4 class="mb-4">12 hour time format</h4>
+                    <Property365DatePicker TValue="DateTime?" ShowTime="true" Change=@(args => OnChange(args, "DatePicker with 12 hour time format", "MM/dd/yyyy h:mm tt")) HourFormat="12" DateFormat="MM/dd/yyyy h:mm tt" Class="w-100" />
+                </Property365Card>
+            </div>
+            <div class="">
+                <Property365Card>
+                    <h4 class="mb-4">Time-only DatePicker</h4>
+                    <Property365DatePicker TValue="DateTime?" ShowTime="true" TimeOnly="true" DateFormat="HH:mm" Change=@(args => OnChange(args, "Time-only DatePicker", "HH:mm")) Class="w-100" />
+                </Property365Card>
+            </div>
+            <div class="">
+                <Property365Card>
+                    <h4 class="mb-4">DatePicker with steps for time</h4>
+                    <Property365DatePicker TValue="DateTime?" ShowTime="true" TimeOnly="true"
+                                        ShowSeconds="true" HoursStep="1.5" MinutesStep="5" DateFormat="HH:mm:ss"
+                                        SecondsStep="10" Change=@(args => OnChange(args, "DatePicker with steps for time", "HH:mm:ss")) Class="w-100" />
+                </Property365Card>
+            </div>
+            <div class="">
+                <Property365Card>
+                    <h4 class="mb-4">DatePicker with special dates</h4>
+                    <Property365DatePicker TValue="DateTime?" DateRender=@DateRenderSpecial Change=@(args => OnChange(args, "DatePicker with special dates", "MM/dd/yyyy")) Class="w-100" />
+                </Property365Card>
+            </div>
+            <div class="">
+                <Property365Card>
+                    <h4 class="mb-4">DatePicker with disabled dates</h4>
+                    <Property365DatePicker TValue="DateTime?" DateRender=@DateRender Change=@(args => OnChange(args, "DatePicker with disabled dates", "MM/dd/yyyy")) Class="w-100" />
+                </Property365Card>
+            </div>
+            <div class="">
+                <Property365Card>
+                    <h4 class="mb-4">Disabled DatePicker</h4>
+                    <Property365DatePicker Disabled="true" @bind-Value=@value Class="w-100" />
+                </Property365Card>
+            </div>
+            <div class="">
+                <Property365Card>
+                    <h4 class="mb-4">DatePicker with footer template</h4>
+                    <Property365DatePicker @bind-Value=@value DateFormat="d" Class="w-100">
+                        <FooterTemplate>
+                            <Property365Button Click=@OnTodayClick Text="Today" />
+                        </FooterTemplate>
+                    </Property365DatePicker>
+                </Property365Card>
+            </div>
+            <div class="">
+                <Property365Card>
+                    <h4 class="mb-4">DatePicker with custom initial view date (June 1, 2040)</h4>
+                    <Property365DatePicker InitialViewDate="new DateTime(2040,06,01)" TValue="DateTime?" Change=@(args => OnChange(args, "DatePicker with custom initial view date (June 1, 2040)", "MM/dd/yyyy")) Class="w-100" />
+                </Property365Card>
+            </div>
+            <div class="">
+                <Property365Card>
+                    <h4 class="mb-4">DatePicker with minimum and maximum dates</h4>
+                    <Property365DatePicker Min="DateTime.Today.AddDays(-7)" Max="DateTime.Today.AddDays(7)" TValue="DateTime?" Change=@(args => OnChange(args, "DatePicker with minimum and maximum dates", "MM/dd/yyyy")) Class="w-100" />
+                </Property365Card>
+            </div>
+            <div class="">
+                <Property365Card>
+                    <h4 class="mb-4">DatePicker with disabled weekends</h4>
+                    <Property365DatePicker DateRender=@DateRenderNoWeekends TValue="DateTime?" Change=@(args => OnChange(args, "DatePicker with disabled weekends", "MM/dd/yyyy")) Class="w-100" />
+                </Property365Card>
+            </div>
+        </div>
+    </div>
+    <div class="w-full p-3">
+        <Property365Card style="overflow: scroll;">
+            <h4 class="mb-4">Calendar</h4>
+            <Property365DatePicker TValue="DateTime?" Inline="true" Change="@(args => OnChange(args, "Calendar", "MM/dd/yyyy"))" />
+        </Property365Card>
+    </div>
+</div>
+</Property365ComponentContainer>
+
+<EventConsole @ref=@console Class="mt-4" />
+
+@code {
+    DateTime? value = DateTime.Now;
+
+    IEnumerable<DateTime> dates = new DateTime[] { DateTime.Today.AddDays(-1), DateTime.Today.AddDays(1) };
+
+    EventConsole console;
+
+    void OnChange(DateTime? value, string name, string format)
+    {
+        console.Log($"{name} value changed to {value?.ToString(format)}");
+    }
+
+    void DateRenderSpecial(DateRenderEventArgs args)
+    {
+        if (dates.Contains(args.Date))
+        {
+            args.Attributes.Add("style", "background-color: #ff6d41; border-color: white;");
+        }
+    }
+
+    void DateRender(DateRenderEventArgs args)
+    {
+        args.Disabled = args.Disabled || dates.Contains(args.Date);
+    }
+
+    void DateRenderNoWeekends(DateRenderEventArgs args)
+    {
+        args.Disabled = args.Disabled || args.Date.DayOfWeek == DayOfWeek.Sunday || args.Date.DayOfWeek == DayOfWeek.Saturday;
+    }
+
+    void OnTodayClick()
+    {
+        value = DateTime.Now;
+    }
+}

@@ -1,0 +1,16 @@
+﻿@inherits Property365Component
+@if (Visible)
+{
+<li class="menuitem" role="menuitem" @onclick="@OnClick" @attributes="Attributes" style="@Style">
+    <a class="inline-flex items-center  cursor-pointer hover:no-underline">
+        @if (!string.IsNullOrEmpty(Icon))
+        {
+        <span class="menuitem-icon">@((MarkupString)Icon)</span>
+        }
+        @if (!string.IsNullOrEmpty(Text))
+        {
+            <span class="menuitem-text">@Text</span>
+        }
+    </a>
+</li>
+}

@@ -1,0 +1,81 @@
+﻿@page "/selectbar"
+
+<Property365ComponentContainer Name="SelectBar">
+    <div class="row px-3">
+        <div class="col-lg-6 col-xl-4 p-3" style="min-width: fit-content;">
+            <Property365Card>
+                <h4 class="mb-4">Single selection</h4>
+                <Property365SelectBar @bind-Value=@singleValue TValue="bool" Change=@(args => OnChange(args, "SelectBar with single selection"))>
+                    <Items>
+                        <Property365SelectBarItem Text="On" Value="true" />
+                        <Property365SelectBarItem Text="Off" Value="false" />
+                    </Items>
+                </Property365SelectBar>
+            </Property365Card>
+        </div>
+        <div class="col-lg-6 col-xl-4 p-3" style="min-width: fit-content;">
+            <Property365Card>
+                <h4 class="mb-4">Multiple selection</h4>
+                <Property365SelectBar @bind-Value=@values TValue="IEnumerable<int>" Multiple="true" Change=@(args => OnChange(args, "SelectBar with multiple selection"))>
+                    <Items>
+                        <Property365SelectBarItem Text="Orders" Value="1" />
+                        <Property365SelectBarItem Text="Employees" Value="2" />
+                        <Property365SelectBarItem Text="Customers" Value="3" />
+                    </Items>
+                </Property365SelectBar>
+            </Property365Card>
+        </div>
+        <div class="col-lg-6 col-xl-4 p-3" style="min-width: fit-content;">
+            <Property365Card>
+                <h4 class="mb-4">Disabled SelectBar with multiple selection</h4>
+                <Property365SelectBar Disabled="true" @bind-Value=@values TValue="IEnumerable<int>" Multiple="true">
+                    <Items>
+                        <Property365SelectBarItem Text="Orders" Value="1" />
+                        <Property365SelectBarItem Text="Employees" Value="2" />
+                        <Property365SelectBarItem Text="Customers" Value="3" />
+                    </Items>
+                </Property365SelectBar>
+            </Property365Card>
+        </div>
+        <div class="col-lg-6 p-3" style="min-width: fit-content;">
+            <Property365Card>
+                <h4 class="mb-4">SelectBar with items from data</h4>
+                <Property365SelectBar @bind-Value=@values TValue="IEnumerable<int>" Multiple="true" Change=@(args => OnChange(args, "SelectBar with items from data"))
+                            Data="@data" TextProperty="Name" ValueProperty="Id" />
+            </Property365Card>
+        </div>
+        <div class="col-lg-6 p-3" style="min-width: fit-content;">
+            <Property365Card>
+                <h4 class="mb-4">SelectBar with declared items and items from data</h4>
+                <Property365SelectBar @bind-Value=@values Data="@data" TextProperty="Name" ValueProperty="Id" TValue="IEnumerable<int>" Multiple="true" Change=@(args => OnChange(args, "SelectBar with declared items and items from data"))>
+                    <Items>
+                        <Property365SelectBarItem Text="Static item" Value="0" />
+                    </Items>
+                </Property365SelectBar>
+            </Property365Card>
+        </div>
+    </div>
+</Property365ComponentContainer>
+
+<EventConsole @ref=@console Class="mt-4" />
+
+@code {
+    public class MyObject
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    IEnumerable<MyObject> data = new MyObject[] {
+        new MyObject(){ Id = 1 , Name = "Orders"}, new MyObject() { Id = 2 , Name = "Employees"}, new MyObject() { Id = 3 , Name = "Customers" } };
+
+    bool singleValue = false;
+    IEnumerable<int> values = new int[] { 1, 2 };
+    EventConsole console;
+
+    void OnChange(object value, string name)
+    {
+        var str = value is IEnumerable<int> ? string.Join(", ", (IEnumerable<int>)value) : value;
+        console.Log($"{name} value changed to {str}");
+    }
+}

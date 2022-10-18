@@ -1,0 +1,30 @@
+﻿@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Http
+@using Property365.Web.Components
+@inherits LayoutComponentBase
+@inject ExampleService ExampleService
+@inject NavigationManager UriHelper
+@inject IJSRuntime JSRuntime
+@inject IHttpContextAccessor httpContextAccessor
+
+<Property365Dialog />
+<Property365Notification />
+<Property365Tooltip />
+<Property365ContextMenu />
+
+<Property365ContentContainer Name="main">
+    @Body
+</Property365ContentContainer>
+
+@code {
+
+    IEnumerable<Example> examples;
+
+    protected override void OnInitialized()
+    {
+
+        examples = ExampleService.Examples;
+
+        System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+    }
+}

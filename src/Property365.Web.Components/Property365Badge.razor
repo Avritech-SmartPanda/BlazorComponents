@@ -1,0 +1,14 @@
+﻿@inherits Property365Component
+@if (Visible)
+{
+<span @ref="@Element" style="@Style" @attributes="Attributes" class="@GetCssClass()" id="@GetId()">
+    @if (ChildContent != null)
+    {
+        @ChildContent
+    }
+    else
+    {
+        @Text
+    }
+</span>
+}

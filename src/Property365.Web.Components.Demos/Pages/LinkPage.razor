@@ -1,0 +1,24 @@
+﻿@page "/link"
+
+<Property365ComponentContainer Name="Link">
+    <div class="row px-3">
+        <div class="col-md-4 p-3">
+            <Property365Card>
+                <h4 class="mb-3">Link to path in application</h4>
+                <Property365Link Path="buttons" Text="Go to Buttons page" />
+            </Property365Card>
+        </div>
+        <div class="col-md-4 p-3">
+            <Property365Card>
+                <h4 class="mb-3">Link to path in application with icon</h4>
+                <Property365Link Icon="accessibility" Path="button" Text="Go to the Button component page" />
+            </Property365Card>
+        </div>
+        <div class="col-md-4 p-3">
+            <Property365Card>
+                <h4 class="mb-3">Link to url</h4>
+                <Property365Link Path="https://www.Property365.com" Text="Go to url" target="_blank" />
+            </Property365Card>
+        </div>
+    </div>
+</Property365ComponentContainer>

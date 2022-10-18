@@ -1,0 +1,12 @@
+﻿@inherits Property365ComponentWithChildren
+
+@if (Visible)
+{
+    @if (IsResponsive)
+    {
+        <Property365MediaQuery Query="(max-width: 768px)" Change=@OnChange />
+    }
+    <div @ref="@Element" style="@GetStyle()" @attributes="Attributes" class="@GetCssClass()"  id="@GetId()">
+        @ChildContent
+    </div>
+}

@@ -1,0 +1,8 @@
+﻿@inherits Property365ComponentWithChildren
+
+@if (Visible)
+{
+    <div @ref="@Element" @attributes="Attributes" class="@GetCssClass()" style="@Style" id="@GetId()">
+        @ChildContent
+    </div>
+}

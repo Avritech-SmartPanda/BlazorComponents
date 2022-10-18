@@ -1,0 +1,55 @@
+﻿@using Property365.Web.Components
+@using Property365.Web.Components.Rendering
+@using Microsoft.JSInterop
+@using Microsoft.AspNetCore.Components.Forms
+@typeparam TValue
+@inherits FormComponent<TValue>
+
+@if (Visible)
+{
+    <div @ref="@Element" style="@Style" @attributes="Attributes" class="@GetCssClass()" id="@GetId()">
+    <div class="rounded p-2 bg-gray-100">
+        <span class="@ChooseClassList" tabindex="@TabIndex" onkeydown="if(event.keyCode == 32 || event.keyCode == 13){event.preventDefault();this.firstElementChild.click();}">
+            <input tabindex="-1" disabled="@Disabled" @ref="@fileUpload" name="@Name" type="file" accept="@Accept" onkeydown="event.stopPropagation()"
+                @onchange="@OnChange" />
+            <span class="hidden">@ChooseText</span>
+        </span>
+    </div>
+    <div class="rz-fileupload-content rz-corner-bottom">
+        @if (!object.Equals(Value, default(TValue)))
+            {
+                <div class="fileupload-files">
+                    <div class="fileupload-row">
+                        <div>
+                            @if (IsImage)
+                            {
+                                <img style="@ImageStyle" src="@Value" @onclick="@OnImageClick">
+                            }
+                        </div>
+                        <div>
+                            @if (!string.IsNullOrEmpty(Title))
+                            {
+                                <span>@Title</span>
+                            }
+                            else if (!string.IsNullOrEmpty(name))
+                            {
+                                <span>@name</span>
+                            }
+                        </div>
+                        <div>
+                            @if (size != null)
+                            {
+                                <span>@size</span>
+                            }
+                        </div>
+                        <div tabindex="@TabIndex">
+                            <button disabled="@Disabled" type="button" class="@ButtonClassList">
+                                <span class="rz-button-icon-left rz-icon-trash" style="display:block" @onclick="@Remove"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

@@ -1,0 +1,53 @@
+﻿@page "/datagrid-single-selection"
+@using Property365.Web.Components
+@using Property365.Web.Components.Demos.Data
+@using Property365.Web.Components.Demos.Models.Northwind
+@using Microsoft.EntityFrameworkCore
+
+@inject NorthwindContext dbContext
+<h1>DataGrid <strong>Single Selection</strong></h1>
+
+<Property365ComponentContainer Name="DataGrid" Source="DataGridSingleSelection" Heading="false">
+    <div style="display: flex; align-items: center; margin-bottom: 16px">
+    <Property365Button Click="@ClearSelection" Text="Clear Selection" />
+    @if (selectedEmployees?.Any() == true)
+    {
+    <div style="margin-left: 16px">
+        Selected Employee: @selectedEmployees[0].FirstName @selectedEmployees[0].LastName
+    </div>
+    }
+    </div>
+
+    <Property365DataGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="4"
+                AllowSorting="true" Data="@employees" TItem="Employee" ColumnWidth="200px"
+                SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedEmployees>
+        <Columns>
+            <Property365DataGridColumn TItem="Employee" Property="Photo" Title="Employee" Sortable="false" Filterable="false">
+                <Template Context="data">
+                    <Property365Image Path="@data.Photo" style="width: 40px; height: 40px; border-radius: 8px; margin-right: 8px;" />
+                    @data.FirstName @data.LastName
+                </Template>
+            </Property365DataGridColumn>
+            <Property365DataGridColumn TItem="Employee" Property="Title" Title="Title" />
+            <Property365DataGridColumn TItem="Employee" Property="EmployeeID" Title="Employee ID" />
+            <Property365DataGridColumn TItem="Employee" Property="HireDate" Title="Hire Date" FormatString="{0:d}" />
+            <Property365DataGridColumn TItem="Employee" Property="City" Title="City" />
+            <Property365DataGridColumn TItem="Employee" Property="Country" Title="Country" />
+        </Columns>
+    </Property365DataGrid>
+</Property365ComponentContainer>
+@code {
+    IEnumerable<Employee> employees;
+    IList<Employee> selectedEmployees;
+
+    void ClearSelection()
+    {
+        selectedEmployees = null;
+    }
+
+    protected override void OnInitialized()
+    {
+        employees = dbContext.Employees;
+        selectedEmployees = employees.Take(1).ToList();
+    }
+}

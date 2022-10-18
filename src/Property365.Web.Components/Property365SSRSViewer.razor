@@ -1,0 +1,15 @@
+﻿@inherits Property365Component
+
+@inject NavigationManager uriHelper
+@if (Parameters != null)
+{
+    <CascadingValue Value=this>
+        @Parameters
+    </CascadingValue>
+}
+@if (Visible)
+{
+    <div @ref="@Element" style="@Style" @attributes="Attributes" class="@GetCssClass()" id="@GetId()">
+        <iframe frameborder="0" src="@ReportUrl"></iframe>
+    </div>
+}

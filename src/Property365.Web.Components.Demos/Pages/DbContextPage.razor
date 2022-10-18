@@ -1,0 +1,22 @@
+﻿@using Property365.Web.Components.Demos.Data
+@using Property365.Web.Components.Demos.Models.Northwind
+@using Microsoft.EntityFrameworkCore
+
+@inject IDbContextFactory<NorthwindContext> DbFactory
+@implements IDisposable
+
+@code {
+    protected NorthwindContext dbContext;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        dbContext = DbFactory.CreateDbContext();
+    }
+
+    public void Dispose()
+    {
+        dbContext.Dispose();
+    }
+}

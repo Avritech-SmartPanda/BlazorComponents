@@ -1,0 +1,178 @@
+@page "/line-chart"
+@using System.Globalization
+
+<h1>Property365 Blazor Chart with line series</h1>
+<Property365ComponentContainer Name="Chart" Source="LineChart" Heading="false">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 my-5">
+                <Property365Card Class="w-100 mb-4" >
+                    <Property365CheckBox @bind-Value="@smooth" Name="smooth"></Property365CheckBox>
+                    <Property365Label Text="Smooth" For="smooth" Style="margin-left: 8px; vertical-align: middle;" />
+                </Property365Card>
+                <Property365Chart>
+                    <Property365LineSeries Smooth="@smooth" Data="@revenue2019" CategoryProperty="Date" Title="2019" LineType="LineType.Dashed" ValueProperty="Revenue">
+                        <Property365Markers MarkerType="MarkerType.Square" />
+                    </Property365LineSeries>
+                    <Property365LineSeries Smooth="@smooth" Data="@revenue2020" CategoryProperty="Date" Title="2020" ValueProperty="Revenue">
+                        <Property365Markers MarkerType="MarkerType.Circle" />
+                    </Property365LineSeries>
+                    <Property365CategoryAxis Padding="20" Formatter="@FormatAsMonth" />
+                    <Property365ValueAxis Formatter="@FormatAsUSD">
+                        <Property365GridLines Visible="true" />
+                        <Property365AxisTitle Text="Revenue in USD" />
+                    </Property365ValueAxis>
+                </Property365Chart>
+            </div>
+        </div>
+    </div>
+</Property365ComponentContainer>
+@code {
+    bool smooth = false;
+    class DataItem
+    {
+        public string Date { get; set; }
+        public double Revenue { get; set; }
+    }
+
+    string FormatAsUSD(object value)
+    {
+        return ((double)value).ToString("C0", CultureInfo.CreateSpecificCulture("en-US"));
+    }
+
+    string FormatAsMonth(object value)
+    {
+        if (value != null)
+        {
+            return Convert.ToDateTime(value).ToString("MMM");
+        }
+
+        return string.Empty;
+    }
+
+    DataItem[] revenue2019 = new DataItem[] {
+        new DataItem
+        {
+            Date = ("2019-01-01"),
+            Revenue = 234000
+        },
+        new DataItem
+        {
+            Date = ("2019-02-01"),
+            Revenue = 269000
+        },
+        new DataItem
+        {
+            Date = ("2019-03-01"),
+            Revenue = 233000
+        },
+        new DataItem
+        {
+            Date = ("2019-04-01"),
+            Revenue = 244000
+        },
+        new DataItem
+        {
+            Date = ("2019-05-01"),
+            Revenue = 214000
+        },
+        new DataItem
+        {
+            Date = ("2019-06-01"),
+            Revenue = 253000
+        },
+        new DataItem
+        {
+            Date = ("2019-07-01"),
+            Revenue = 274000
+        },
+        new DataItem
+        {
+            Date = ("2019-08-01"),
+            Revenue = 284000
+        },
+        new DataItem
+        {
+            Date = ("2019-09-01"),
+            Revenue = 273000
+        },
+        new DataItem
+        {
+            Date = ("2019-10-01"),
+            Revenue = 282000
+        },
+        new DataItem
+        {
+            Date = ("2019-11-01"),
+            Revenue = 289000
+        },
+        new DataItem
+        {
+            Date = ("2019-12-01"),
+            Revenue = 294000
+        }
+    };
+
+    DataItem[] revenue2020 = new DataItem[] {
+        new DataItem
+        {
+            Date = ("2019-01-01"),
+            Revenue = 334000
+        },
+        new DataItem
+        {
+            Date = ("2019-02-01"),
+            Revenue = 369000
+        },
+        new DataItem
+        {
+            Date = ("2019-03-01"),
+            Revenue = 333000
+        },
+        new DataItem
+        {
+            Date = ("2019-04-01"),
+            Revenue = 344000
+        },
+        new DataItem
+        {
+            Date = ("2019-05-01"),
+            Revenue = 314000
+        },
+        new DataItem
+        {
+            Date = ("2019-06-01"),
+            Revenue = 353000
+        },
+        new DataItem
+        {
+            Date = ("2019-07-01"),
+            Revenue = 374000
+        },
+        new DataItem
+        {
+            Date = ("2019-08-01"),
+            Revenue = 384000
+        },
+        new DataItem
+        {
+            Date = ("2019-09-01"),
+            Revenue = 373000
+        },
+        new DataItem
+        {
+            Date = ("2019-10-01"),
+            Revenue = 382000
+        },
+        new DataItem
+        {
+            Date = ("2019-11-01"),
+            Revenue = 389000
+        },
+        new DataItem
+        {
+            Date = ("2019-12-01"),
+            Revenue = 394000
+        }
+    };
+}

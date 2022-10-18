@@ -1,0 +1,45 @@
+﻿@page "/textbox"
+
+<Property365ComponentContainer Name="TextBox">
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    
+        <Property365Card>
+            <h4 class="mb-4">Default TextBox</h4>
+            <Property365TextBox Change=@(args => OnChange(args, "TextBox")) Class="w-full" />
+        </Property365Card>
+
+        <Property365Card>
+            <h4 class="mb-4">Placeholder</h4>
+            <Property365TextBox Placeholder="Search..." Change=@(args => OnChange(args, "TextBox with placeholder")) Class="w-full" />
+        </Property365Card>
+
+        <Property365Card>
+            <h4 class="mb-4">5 characters maximum</h4>
+            <Property365TextBox @bind-Value=@value MaxLength="5" Change=@(args => OnChange(args, "TextBox with 5 maximum characters")) Class="w-full" />
+        </Property365Card>
+  
+        <Property365Card>
+            <h4 class="mb-4">Change on every input</h4>
+            <Property365TextBox @oninput=@(args => OnChange(args.Value.ToString(), "TextBox with change on every input")) Class="w-full" />
+        </Property365Card>
+    
+        <Property365Card>
+            <h4 class="mb-4">Disabled TextBox</h4>
+            <Property365TextBox Disabled="true" Class="w-full" />
+        </Property365Card>
+ 
+</div>
+</Property365ComponentContainer>
+
+<EventConsole @ref=@console Class="mt-4" />
+
+@code {
+    string value;
+
+    EventConsole console;
+
+    void OnChange(string value, string name)
+    {
+        console.Log($"{name} value changed to {value}");
+    }
+}

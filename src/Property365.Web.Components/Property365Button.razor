@@ -1,0 +1,41 @@
+﻿@inherits Property365Component
+
+@if (Visible)
+{
+    <button @ref="@Element" style="@Style" disabled="@IsDisabled"
+            type="@Enum.GetName(typeof(ButtonType), ButtonType)?.ToLower()"
+            @attributes="Attributes" class="@GetCssClass()" id="@GetId()"
+            @onclick="@OnClick">
+        @if (ChildContent != null)
+        {
+            @ChildContent
+        }
+        else
+        {
+            @if (IsBusy)
+            {
+                <Property365Icon Icon="refresh" Style="animation: rotation 700ms linear infinite " />
+                @if (!string.IsNullOrEmpty(BusyText))
+                {
+                    <span class="text-base ">@BusyText</span>
+                }
+            }
+            else
+            {
+                @if (!string.IsNullOrEmpty(@Icon))
+                {
+                     var baseStyles = !string.IsNullOrEmpty(Text)? "mr-2" : "";
+                    <i class="@($"rz-button-icon-left rzi {baseStyles}")">@((MarkupString)Icon)</i>
+                }
+                @if (!string.IsNullOrEmpty(Image))
+                {
+                    <img class="rz-button-icon-left rzi mr-2" src="@Image" />
+                }
+                @if (!string.IsNullOrEmpty(Text))
+                {
+                    <span class="text-base ">@Text</span>
+                }
+            }
+        }
+    </button>
+}

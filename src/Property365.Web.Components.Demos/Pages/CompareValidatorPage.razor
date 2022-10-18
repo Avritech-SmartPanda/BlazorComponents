@@ -1,0 +1,110 @@
+@page "/comparevalidator"
+@using Property365.Web.Components
+@using System.Text.Json
+
+<Property365ComponentContainer Name="CompareValidator">
+<div class="container my-4">
+    <div class="row">
+        <div class="col">
+            <Property365Card Class="w-100 mb-4" >
+            <Property365CheckBox @bind-Value=@popup Name="popup"></Property365CheckBox>
+                <Property365Label Text="Display validators as popup" For="popup" Style="margin-left: 8px; vertical-align: middle;" />
+            </Property365Card>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <Property365TemplateForm TItem="Model" Data=@model Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
+                <Property365Fieldset Text="Password">
+                    <div class="row mb-5">
+                        <div class="col-md-4" style="align-self: center;">
+                            <Property365Label Text="Password" />
+                        </div>
+                        <div class="col">
+                            <Property365Password style="display: block" Name="Password" @bind-Value=@model.Password Class="w-100" />
+                            <Property365RequiredValidator Component="Password" Text="Enter password" Popup="@popup" Style="position: absolute" />
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-4" style="align-self: center;">
+                            <Property365Label Text="Repeat Password" />
+                        </div>
+                        <div class="col">
+                            <Property365Password style="display: block" Name="RepeatPassword" @bind-Value=@model.RepeatPassword  Class="w-100" />
+                            <Property365RequiredValidator Component="RepeatPassword" Text="Repeat your password" Popup=@popup Style="position: absolute" />
+                            <Property365CompareValidator Visible=@(!string.IsNullOrEmpty(model.RepeatPassword)) Value=@model.Password Component="RepeatPassword" Text="Passwords should be the same" Popup=@popup Style="position: absolute" />
+                        </div>
+                    </div>
+                    <Property365Button ButtonType="ButtonType.Submit" Text="Submit"></Property365Button>
+                </Property365Fieldset>
+            </Property365TemplateForm>
+        </div>
+        <div class="col-lg-6">
+            <Property365TemplateForm TItem="Model" Data=@model Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
+                <Property365Fieldset Text="Comparison operator">
+                    <div class="row mb-5">
+                        <div class="col-md-4" style="align-self: center;">
+                            <Property365Label Text="Operator" />
+                        </div>
+                        <div class="col">
+                            <Property365DropDown @bind-Value=@compareOperator Data=@Enum.GetValues(typeof(CompareOperator)) Class="w-100" />
+                        </div>
+                    </div>
+                    <div class="row mb-5">
+                        <div class="col-md-4" style="align-self: center;">
+                            <Property365Label Text="Value to compare with" />
+                        </div>
+                        <div class="col">
+                            <Property365Numeric @bind-Value=@targetValue Class="w-100" />
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-4" style="align-self: center;">
+                            <Property365Label Text="Value" />
+                        </div>
+                        <div class="col">
+                            <Property365Numeric @bind-Value=@model.Value Name="Value" style="display: block" Class="w-100" />
+                            <Property365CompareValidator Value=@targetValue Component="Value" Popup=@popup Style="position: absolute" Operator=@compareOperator />
+                        </div>
+                    </div>
+                    <Property365Button ButtonType="ButtonType.Submit" Text="Validate"></Property365Button>
+                </Property365Fieldset>
+            </Property365TemplateForm>
+        </div>
+    </div>
+</div>
+</Property365ComponentContainer>
+
+<EventConsole @ref=@console Class="mt-4" />
+
+@code {
+    class Model
+    {
+        public string Password { get; set; }
+        public double Value { get; set; }
+        public string RepeatPassword { get; set; }
+    }
+
+    bool popup;
+    double targetValue = 1;
+
+    CompareOperator compareOperator = CompareOperator.Equal;
+
+    Model model = new Model();
+    EventConsole console;
+
+    void Log(string eventName, string value)
+    {
+        console.Log($"{eventName}: {value}");
+    }
+
+    void OnSubmit(Model model)
+    {
+        Log("Submit", JsonSerializer.Serialize(model, new JsonSerializerOptions() { WriteIndented = true }));
+    }
+
+    void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
+    {
+        Log("InvalidSubmit", JsonSerializer.Serialize(args, new JsonSerializerOptions() { WriteIndented = true }));
+    }
+}

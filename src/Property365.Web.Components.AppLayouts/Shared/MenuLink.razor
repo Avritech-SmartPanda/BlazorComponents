@@ -1,0 +1,7 @@
+﻿
+<li><a href="@MenuItem.Url" class="px-2 xl:px-4 py-2 text-gray-800 rounded-md hover:bg-gray-200">@MenuItem.DisplayName</a></li>
+
+@code {
+    [Parameter, EditorRequired]
+    public MenuItem MenuItem { get; set; }
+}

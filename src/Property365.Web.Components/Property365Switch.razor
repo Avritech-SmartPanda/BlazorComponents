@@ -1,0 +1,13 @@
+﻿@using Property365.Web.Components
+@using Microsoft.AspNetCore.Components.Forms
+@inherits FormComponent<bool>
+@if (Visible)
+{
+<div @ref="@Element" @attributes="Attributes" class="@GetCssClass()" id="@GetId()"
+     @onclick="@Toggle" @onkeypress="@(async (args) => { if (args.Code == "Space") { await Toggle(); } })" style="outline: 0 none;@Style" tabindex="@TabIndex">
+    <div class="helper-hidden-accessible">
+        <input type="checkbox" name="@Name" value="@Value" tabindex="-1">
+    </div>
+    <span class="rz-switch-circle@(Disabled ? " rz-disabled" : "")"></span>
+</div>
+}

@@ -1,0 +1,73 @@
+﻿@page "/datagrid-group-footer-template"
+
+@using Property365.Web.Components.Demos.Data
+@using Property365.Web.Components.Demos.Models.Northwind
+@using Microsoft.EntityFrameworkCore
+
+@inject NorthwindContext dbContext
+
+<h1>DataGrid <strong>Group Footer Totals</strong></h1>
+
+<p>The <strong>GroupFooterTemplate</strong> column property allows you to display aggregated data in the column footer for each group.</p>
+
+<Property365ComponentContainer Name="DataGrid" Source="DataGridGroupFooterTemplate" Heading="false">
+    <Property365DataGrid @ref="ordersGrid"  AllowGrouping="false" AllowFiltering="true" AllowPaging="true" AllowSorting="true" 
+            Data="@orders" TItem="Order" Render="@OnRender">
+        <GroupHeaderTemplate>
+            @context.GroupDescriptor.GetTitle(): @(context.Data.Key ?? ""), Group items count: @context.Data.Count, Last order date: @(context.Data.Items.Cast<Order>().OrderByDescending(o => o.OrderDate).FirstOrDefault()?.OrderDate)
+        </GroupHeaderTemplate>
+        <Columns>
+            <Property365DataGridColumn Width="50px" TItem="Order" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                <Template>
+                    @(orders.IndexOf(context) + 1)
+                </Template>
+            </Property365DataGridColumn>
+            <Property365DataGridColumn Width="200px" TItem="Order" Property="OrderID" Title="Order ID">
+                <FooterTemplate>
+                    Displayed orders: <b>@ordersGrid.View.Count()</b> of <b>@orders.Count()</b>
+                </FooterTemplate>
+            </Property365DataGridColumn>
+            <Property365DataGridColumn Width="200px" TItem="Order" Property="Customer.CompanyName" Title="Customer" />
+            <Property365DataGridColumn TItem="Order" Property="Employee.LastName" Title="Employee">
+                <Template Context="order">
+                    @order.Employee?.FirstName @order.Employee?.LastName
+                </Template>
+            </Property365DataGridColumn>
+            <Property365DataGridColumn TItem="Order" Property="OrderDate" Title="Order Date" FormatString="{0:d}">
+                <FooterTemplate>
+                    Last order date: <b>@String.Format("{0:d}", orders.OrderByDescending(o => o.OrderDate).Last().OrderDate)</b>
+                </FooterTemplate>
+            </Property365DataGridColumn>
+            <Property365DataGridColumn TItem="Order" Property="Freight" Title="Freight">
+                <Template Context="order">
+                    @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", order.Freight)
+                </Template>
+                <FooterTemplate>
+                    Total amount: <b>@String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", orders.Sum(o => o.Freight))</b>
+                </FooterTemplate>
+                <GroupFooterTemplate>
+                    Group amount: <b>@String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", context.Data.Items.Cast<Order>().Sum(o => o.Freight))</b>
+                </GroupFooterTemplate>
+            </Property365DataGridColumn>
+            <Property365DataGridColumn TItem="Order" Property="ShipName" Title="Ship Name" />
+        </Columns>
+    </Property365DataGrid>
+</Property365ComponentContainer>
+@code {
+    IList<Order> orders;
+    Property365DataGrid<Order> ordersGrid;
+
+    protected override void OnInitialized()
+    {
+        orders = dbContext.Orders.Include("Customer").Include("Employee").ToList();
+    }
+
+    void OnRender(DataGridRenderEventArgs<Order> args)
+    {
+        if(args.FirstRender)
+        {
+            args.Grid.Groups.Add(new GroupDescriptor(){ Property = "Employee.LastName", Title = "Employee" });
+            StateHasChanged();
+        }
+    }
+}

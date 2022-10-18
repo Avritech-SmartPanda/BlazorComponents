@@ -1,0 +1,59 @@
+﻿@page "/tooltip"
+
+@inject TooltipService tooltipService
+
+<Property365ComponentContainer Name="Tooltip">
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        <Property365Card Class="w-full">
+            <h4 class="mb-4">Show tooltip on mouse over Property365 component</h4>
+            <Property365Button Text="Show tooltip" MouseEnter="@(args => ShowTooltip(args) )" />
+        </Property365Card>
+        <Property365Card Class="w-full">
+            <h4 class="mb-4">Show tooltip on mouse over Property365 component and close it after 10 sec</h4>
+            <Property365Button Text="Show tooltip"
+                MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Duration = 10000 }))" />
+        </Property365Card>
+
+        <Property365Card Class="w-full">
+            <h4 class="mb-4">Show styled tooltip on button click and close it on page click</h4>
+            <Property365Button @ref="Property365Button" Text="Show tooltip"
+                Click="@(args => ShowTooltip(Property365Button.Element, new TooltipOptions(){ Style = "background-color: #ffffca; color:#000", Duration = null }))" />
+        </Property365Card>
+
+        <Property365Card Class="w-full">
+            <h4 class="mb-4">Show tooltip with HTML content</h4>
+            <Property365Button Text="Show tooltip"
+                MouseEnter="@(args => ShowTooltipWithHtml(args, new TooltipOptions(){ Style = "color: yellow", Duration = null }))" />
+        </Property365Card>
+
+        <Property365Card Class="w-full">
+            <h4 class="mb-4">Show tooltip on mouse over HTML elment</h4>
+            <button @ref="htmlButton" @onmouseover="@(args => ShowTooltip(htmlButton))">
+                Show tooltip
+            </button>
+        </Property365Card>
+
+        <Property365Card Class="w-full">
+            <h4 class="mb-4">Tooltip position</h4>
+            <Property365Button Text="Left" MouseEnter="@(args => ShowTooltip(args,  new TooltipOptions(){ Position = TooltipPosition.Left }))"  Class="mr-1 mb-1" />
+            <Property365Button Text="Top"  MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Position = TooltipPosition.Top }))" Class="mr-1 mb-1" />
+            <Property365Button Text="Bottom" MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Position = TooltipPosition.Bottom }))"  Class="mr-1 mb-1" />
+            <Property365Button Text="Right"  MouseEnter="@(args => ShowTooltip(args,  new TooltipOptions(){ Position = TooltipPosition.Right }))" Class="mr-1 mb-1" />
+        </Property365Card>
+
+    </div>
+</Property365ComponentContainer>
+
+@code {
+    ElementReference htmlButton;
+    Property365Button Property365Button;
+    void ShowTooltip(ElementReference elementReference, TooltipOptions options = null) =>
+    tooltipService.Open(elementReference, "Some content", options);
+
+    void ShowTooltipWithHtml(ElementReference elementReference, TooltipOptions options = null) =>
+    tooltipService.Open(elementReference, ds =>
+    @<div>
+        Some <b>HTML</b> content
+    </div>
+    , options);
+}
