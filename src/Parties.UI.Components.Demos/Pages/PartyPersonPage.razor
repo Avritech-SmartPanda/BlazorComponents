@@ -1,0 +1,46 @@
+﻿@page "/party-person"
+@using Parties.Models.Data
+@using Property365.Web.Components
+
+<PartyUIContainer Name="PartyPerson">
+    <Property365Card Class="rz-shadow-0 p-5">
+        <Property365FormTemplate Data=@("SimpleLogin")  Submit="@((Person args) => { Submit(args); })">
+            <PartyPerson Login=@(args => OnLogin(args, "Simple login")) />
+        </Property365FormTemplate>
+    </Property365Card>
+</PartyUIContainer>
+
+<EventConsole @ref=@console Class="mt-4" />
+
+@code {
+    string userName = "admin";
+    string password = "admin";
+    EventConsole console;
+
+    void OnLogin(LoginArgs args, string name)
+    {
+        console.Log($"{name} -> Username: {args.Username} and password: {args.Password}");
+    }
+
+    void OnRegister(string name)
+    {
+        console.Log($"{name} -> Register");
+    }
+
+    void OnResetPassword(string value, string name)
+    {
+        console.Log($"{name} -> ResetPassword for user: {value}");
+    }
+    string UserName;
+
+    void OnLogin(PersonArgs args, string name)
+    {
+        UserName = args.FirstName + " " +  args.LastName;
+    @* console.Log($"{name} -> Username: {args.Username} and password: {args.Password}"); *@
+    }
+
+   void Submit(Person arg)
+    {
+        //
+    }
+}

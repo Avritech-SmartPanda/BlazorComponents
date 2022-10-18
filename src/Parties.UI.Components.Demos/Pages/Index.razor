@@ -1,0 +1,213 @@
+﻿@page "/"
+@using Parties.Models.Data
+
+
+<PageTitle>Property365 Blazor Components</PageTitle>
+
+
+<div class="pt-4 pb-5 px-3 px-lg-5">
+  <div class="container-fluid stage light">
+    <div class="container">
+
+
+      <div id="components" class="flex flex-row no-gutters text-center">
+        <div class="w-full">
+
+          <h2 class="subtitle">Most Popular Components</h2>
+
+          <div class="grid grid-cols-5 gap-4">
+            <div class="flex flex-col popular-components">
+              <a href="/party-person" class="text-blue-500">
+                PartyPerson
+              </a>
+            </div>
+
+          </div>
+
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="container-fluid stage dark">
+    <div class="container">
+      <div class="flex flex-row mt-5 text-center">
+        <div class="w-full">
+          <h3>Get started today. Party UI Components is free to use.</h3>
+        </div>
+      </div>
+
+      <div class="flex flex-row text-center copyright">
+        <div class="w-full">
+          <p class="mb-5">
+            <Property365Label Text="Party UI Blazor Components, &copy; 2022."></Property365Label>
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<section class="py-8 bg-white lg:py-16 dark:bg-gray-900 lg:pb-24" id="components">
+  <div class="px-4 mx-auto max-w-8xl lg:px-4 lg:text-center">
+    <h2
+      class="mb-4 text-2xl font-bold tracking-tight text-gray-900 lg:font-extrabold lg:text-4xl lg:leading-snug dark:text-white lg:text-center 2xl:px-48">
+      Tailwind CSS Components</h2>
+
+
+
+
+
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+<div class="mt-8 code-example">
+  <div class="p-4 w-full bg-gray-50 rounded-t-xl border border-gray-200 dark:border-gray-600 dark:bg-gray-700">
+    <div class="grid grid-cols-3">
+      <div class="col-span-2 sm:col-span-1">
+        <a href="https://github.com/themesberg/flowbite/blob/main/content/components/forms.md"
+          rel="noopener nofollow noreferrer"
+          class="inline-flex items-center py-2 px-4 mr-3 text-xs font-medium text-gray-900 bg-white rounded-lg border border-gray-200 focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-500 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+          <svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="github" class="mr-2 w-4 h-4" role="img"
+            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
+            <path fill="currentColor"
+              d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z">
+            </path>
+          </svg> Edit on GitHub
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="code-preview-wrapper">
+    <div id="default-form-example"
+      class="flex p-0 bg-white bg-gradient-to-r border-gray-200 code-preview dark:bg-gray-900 border-x dark:border-gray-600">
+      <div class="w-full code-responsive-wrapper">
+        <iframe title="default form example" class="mx-auto w-full h-0 bg-white dark:bg-gray-900 iframe-code"> </iframe>
+        <div class="flex justify-center items-center p-5 w-full bg-white dark:bg-gray-900 hidden"
+          data-component-loader="">
+          <div role="status">
+            <svg aria-hidden="true" class="mr-2 w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+              viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                fill="currentColor"></path>
+              <path
+                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                fill="currentFill"></path>
+            </svg>
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="code-syntax-wrapper">
+    <div class="relative border-gray-200 border-y border-x code-syntax dark:border-gray-600">
+      <div
+        class="grid grid-cols-2 w-full bg-gray-50 rounded-t-md border-b border-gray-200 dark:bg-gray-700 dark:border-gray-600">
+        <ul class="flex text-sm font-medium text-center text-gray-500 dark:text-gray-400">
+          <li>
+            <span
+              class="inline-block p-2 px-3 w-full text-gray-800 bg-gray-100 border-r border-gray-200 dark:text-white dark:bg-gray-800 dark:border-gray-600">HTML</span>
+          </li>
+        </ul>
+        <div class="flex justify-end">
+          <button data-tooltip-target="default-form-example-copy-clipboard-tooltip" data-tooltip-placement="bottom"
+            type="button" data-copy-state="copy"
+            class="flex items-center py-2 px-3 text-xs font-medium text-gray-600 bg-gray-100 border-l border-gray-200 dark:border-gray-600 dark:text-gray-400 dark:bg-gray-800 hover:text-blue-700 dark:hover:text-white copy-to-clipboard-button">
+            <svg class="mr-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z">
+              </path>
+            </svg> <span class="copy-text">Copy</span>
+          </button>
+
+          <div id="default-form-example-copy-clipboard-tooltip" role="tooltip"
+            class="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 tooltip dark:bg-gray-700"
+            data-popper-placement="bottom"
+            style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(687px, 44px);">
+            Copy to clipboard
+            <div class="tooltip-arrow" data-popper-arrow=""
+              style="position: absolute; left: 0px; transform: translate(99px, 0px);"></div>
+          </div>
+
+          <div class="hidden" data-clipboard-content="">
+            <form>
+              <div class="mb-6">
+                <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Your
+                  email</label>
+                <input type="email" id="email"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="name@flowbite.com" required="">
+              </div>
+              <div class="mb-6">
+                <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Your
+                  password</label>
+                <input type="password" id="password"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  required="">
+              </div>
+              <div class="flex items-start mb-6">
+                <div class="flex items-center h-5">
+                  <input id="remember" type="checkbox" value=""
+                    class="w-4 h-4 bg-gray-50 rounded border border-gray-300 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800"
+                    required="">
+                </div>
+                <label for="remember" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Remember
+                  me</label>
+              </div>
+              <button type="submit"
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="highlight">
+        <pre class="chroma language-html" tabindex="0">
+                <code class=" language-html" data-lang="html">
+                 code
+</code>
+</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+@code {
+
+  string UserName;
+
+  void OnLogin(PersonArgs args, string name)
+  {
+    UserName = args.FirstName + " " + args.LastName;
+    @* console.Log($"{name} -> Username: {args.Username} and password: {args.Password}"); *@
+  }
+
+  void Submit(Person arg)
+  {
+    //
+  }
+
+}

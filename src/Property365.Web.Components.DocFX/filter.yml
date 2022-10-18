@@ -1,5 +1,0 @@
-apiRules:
-- exclude:
-    uidRegex: ^Property365\.Blazor\.Rendering
-- exclude:
-    uidRegex: ^Property365\.Blazor\.Property365HtmlEditor.*Base

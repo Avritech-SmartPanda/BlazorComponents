@@ -1,9 +1,0 @@
-@inject NavigationManager NavigationManager
-@inject ThemeService ThemeService
-<link href="_content/Property365.Web.Components/css/@(ThemeService.CurrentTheme).css" rel="stylesheet" />
-@code {
-    protected override void OnInitialized()
-    {
-        ThemeService.Initialize(NavigationManager);
-    }
-}
